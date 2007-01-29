@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  metal:use-macro="context/@@groupserver_layout/page">
+  <head>
+    
+    <title metal:fill-slot="title">Login</title>
+    
+    <tal:block metal:fill-slot="metadata">
+      <meta name="title" content="GroupServer Login"/>
+      <meta name="author" content="Richard Waid" />
+      <meta name="description" content="This page is used to login to GroupServer" />
+      <meta name="date" content="2007-01-29"/>
+    </tal:block>
+
+    <tal:block metal:fill-slot="javascript">
+      <script type="text/javascript" src="/++resource++prototype/prototype.js">&#160;</script>
+      <script type="text/javascript" src="/++resource++scriptaculous/scriptaculous.js">&#160;</script>
+      <script type="text/javascript">
+          Effect.Shake("content");
+      </script>
+    </tal:block>
+
+  </head>
+  
+  <body>
+    <div metal:fill-slot="messages"
+      tal:define="result view/process_form | nothing;
+      isError python:result and result.has_key('error') and result['error'];"
+      tal:condition="python:result and result.has_key('message')"
+      tal:attributes="class python:(isError and 'message-error') or 'message-result'"
+      tal:content="structure result/message"/>
+
+    <div metal:fill-slot="contextnavigation" />
+
+    <tal:block metal:fill-slot="body">
+        <div id="content">
+          <form id="loginbox">
+              <div class="formelementtext">
+                  <label class="text" for="__ac_name">Login name</label>
+                  <div class="hint">Enter your login name</div>
+                  <input id="__ac_name" class="text" type="text" value="" title="Enter your login name" name="__ac_name" />
+              </div>
+              <div class="formelementtext">
+                  <label class="text" for="__ac_password">Login password</label>
+                  <div class="hint">Enter your password</div>
+                  <input id="__ac_name" class="text" type="text" value="" title="Enter your password" name="__ac_password" />
+              </div>
+              <input class="text" type="submit" name="submit" value="login" />
+          </form>
+        </div>
+    </tal:block>
+  </body>
+</html>
