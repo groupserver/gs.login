@@ -35,7 +35,7 @@ class GSLoginView( Products.Five.BrowserView ):
 
         state = False
         passhmac = ''
-        if user and password:       
+        if user and password:
             passhmac = self.request.get('password', '')
             seed = self.request.get('seed','')
             
@@ -43,10 +43,21 @@ class GSLoginView( Products.Five.BrowserView ):
 
             state = passhmac == myhmac or False
         
+        if state == True:
+            if self.passwordsEncrypted():
+                storepass = '{SHA}%s=' % password
+            else:
+                storepass = password
+            self.context.cookie_authentication.credentialsChanged(user, login, storepass)
+        
         user = not not user
         o = password
         password = not not password
 
-        return (state, user, password, o, passhmac)
+        if state == True:
+            self.request.response.redirect('loggedin.html')
+            return True
+            
+        return (state, user, password, o, passhmac, myhmac)
 
 Globals.InitializeClass( GSLoginView )
