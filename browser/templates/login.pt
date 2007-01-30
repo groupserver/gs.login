@@ -19,8 +19,29 @@
     <tal:block metal:fill-slot="javascript">
       <script type="text/javascript" src="/++resource++prototype/prototype.js">&#160;</script>
       <script type="text/javascript" src="/++resource++scriptaculous/scriptaculous.js">&#160;</script>
+      <script type="text/javascript" src="/++resource++crypto/sha1.js">&#160;</script>
       <script type="text/javascript">
-          Effect.Shake("content");
+          function onsubmit(event) {
+              el = Event.element(event);
+              
+              pw = $F(el.password);
+              if ($F(el.ep) == 'True') {
+                  pw = b64_sha1(pw);
+              }
+
+              new_passvalue = hex_hmac_sha1(pw, ($F(el.login)+pw+$F(el.seed)));
+              alert(new_passvalue);
+              el.password.value = new_passvalue;
+              alert(el.password);
+              Event.unloadCache();
+              alert(el.id);
+              //$('loginbox').submit();
+          };
+          function onload(event) { 
+              Effect.Shake($('content'));
+              // Event.observe($('loginbox'), 'submit', onsubmit, false);
+          }
+          Event.observe(window, 'load', onload);
       </script>
     </tal:block>
 
@@ -36,22 +57,24 @@
 
     <div metal:fill-slot="contextnavigation" />
 
-    <tal:block metal:fill-slot="body">
-        <div id="content">
-          <form id="loginbox">
+    <tal:block metal:fill-slot="body"
+               tal:define="credentials view/processCredentials">
+          <span tal:content="credentials" />
+          <form id="loginbox" onsubmit="javascript:onsubmit">
+              <input type="hidden" name="seed" tal:attributes="value view/generateSeed"/>
+              <input type="hidden" name="ep" tal:attributes="value view/passwordsEncrypted"/>
               <div class="formelementtext">
-                  <label class="text" for="__ac_name">Login name</label>
+                  <label class="text" for="login">Login name</label>
                   <div class="hint">Enter your login name</div>
-                  <input id="__ac_name" class="text" type="text" value="" title="Enter your login name" name="__ac_name" />
+                  <input id="login" class="text" type="text" value="" title="Enter your login name" name="login" />
               </div>
               <div class="formelementtext">
-                  <label class="text" for="__ac_password">Login password</label>
+                  <label class="text" for="password">Login password</label>
                   <div class="hint">Enter your password</div>
-                  <input id="__ac_name" class="text" type="text" value="" title="Enter your password" name="__ac_password" />
+                  <input id="password" class="text" type="password" value="" title="Enter your password" name="password" />
               </div>
               <input class="text" type="submit" name="submit" value="login" />
           </form>
-        </div>
     </tal:block>
   </body>
 </html>
