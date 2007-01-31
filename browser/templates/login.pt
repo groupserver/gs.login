@@ -21,7 +21,7 @@
 
     <tal:block metal:fill-slot="javascript">
       <script type="text/javascript" src="/++resource++prototype/prototype.js">&#160;</script>
-      <script type="text/javascript" src="/++resource++scriptaculous/scriptaculous.js">&#160;</script>
+      <script type="text/javascript" src="/++resource++scriptaculous/scriptaculous.js?load=effects">&#160;</script>
       <script type="text/javascript" src="/++resource++crypto/sha1.js">&#160;</script>
       <script type="text/javascript">
           function loginSubmit(event) {
@@ -33,7 +33,7 @@
               }
 
               new_passvalue = hex_hmac_sha1(pw, ($F(el.login)+pw+$F(el.seed)));
-              el.passhash.value = new_passvalue;
+              el.ph.value = new_passvalue;
               el.password.value = '';
               Event.unloadCache();
           };
@@ -54,7 +54,7 @@
   <body>
 
     <div metal:fill-slot="messages" class="message-error"
-      tal:condition="python:view.getState() and not view.getState()[0]">
+      tal:condition="python:view.state and not view.state[0]">
       <p>Please enter your login name and password, below.</p>
       <p>This is usually neccessary for one of these reasons:</p>      
       <ul>
@@ -75,7 +75,7 @@
           <form id="login">
               <input type="hidden" name="seed" tal:attributes="value view/generateSeed"/>
               <input type="hidden" name="ep" tal:attributes="value view/passwordsEncrypted"/>
-              <input type="hidden" name="passhash" value=""/>
+              <input type="hidden" name="ph" value=""/>
               <input type="hidden" name="came_from" tal:attributes="value request/came_from | nothing" />
               <input type="hidden" name="failed" tal:attributes="value python:view.state and view.state[0]"/>
               <div class="formelementtext">

@@ -9,5 +9,6 @@
   
   <body>
           <b tal:content="user/getId" />
+          <span tal:replace="structure request" />
   </body>
 </html>

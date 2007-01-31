@@ -4,8 +4,6 @@
 import Products.Five, Globals
 import sha, hmac
 import time
-import logging
-logger = logging.getLogger('GSLogin')
 
 class GSLoginView( Products.Five.BrowserView ):
     ''' View object for logging into a groupserver site.
@@ -20,9 +18,6 @@ class GSLoginView( Products.Five.BrowserView ):
     def generateSeed( self ):
         return sha.new(str(time.time())).hexdigest()
 
-    def getState( self ):
-        return self.state
-
     def passwordsEncrypted( self ):
         return not not self.context.acl_users.encrypt_passwords
 
@@ -31,7 +26,7 @@ class GSLoginView( Products.Five.BrowserView ):
         
         if not login:
             return
-
+        
         user = None
         password = None
         if login:
@@ -41,15 +36,15 @@ class GSLoginView( Products.Five.BrowserView ):
                 if self.passwordsEncrypted():
                     # strip off the encoding declaration and the trailing '='
                     password = password.split('}')[-1][:-1]
-
+        
         state = False
         passhmac = ''
         if user and password:
-            passhmac = self.request.get('passhash', '')
+            passhmac = self.request.get('ph', '')
             seed = self.request.get('seed','')
             
             myhmac = hmac.new(password, login+password+seed, sha).hexdigest()
-
+            
             state = passhmac == myhmac or False
         
         if state == True:
@@ -58,13 +53,23 @@ class GSLoginView( Products.Five.BrowserView ):
             else:
                 storepass = password
             self.context.cookie_authentication.credentialsChanged(user, login, storepass)
-
+            
             came_from = self.request.get('came_from', '')
             if came_from:
                 self.request.response.redirect(came_from)
             else:
-                self.request.response.redirect('loggedin.html')
-        
+                seed = self.generateSeed()
+                passhash = hmac.new(password, login+password+seed, sha).hexdigest()
+                base_uri = self.request.BASE0
+                redirect_uri = 'http://groupserver2:8080'
+                persist = self.request.get('__ac_persistent', '')
+                if base_uri != redirect_uri:
+                    self.request.response.redirect(
+                      '%s/login.html?login=%s&ph=%s&seed=%s&__ac_persistent=%s' %
+                      (redirect_uri, login, passhash, seed, persist))
+                else:
+                    self.request.response.redirect('%s/loggedin.html' % redirect_uri)
+                
         user = not not user
         password = not not password
         
