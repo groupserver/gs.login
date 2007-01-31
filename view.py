@@ -5,6 +5,9 @@ import Products.Five, Globals
 import sha, hmac
 import time
 
+from Products.XWFCore.XWFUtils import getOption
+from util import getDivisionObjects, isGSUser, getCurrentUserDivision
+
 class GSLoginView( Products.Five.BrowserView ):
     ''' View object for logging into a groupserver site.
 
@@ -31,15 +34,16 @@ class GSLoginView( Products.Five.BrowserView ):
         password = None
         if login:
             user = self.context.acl_users.getUser(login)
-            if user:
+            if user and isGSUser( user ): # check that we are actually a GSUser too
                 password = user.get_password()
                 if self.passwordsEncrypted():
                     # strip off the encoding declaration and the trailing '='
                     password = password.split('}')[-1][:-1]
         
+
         state = False
         passhmac = ''
-        if user and password:
+        if user:
             passhmac = self.request.get('ph', '')
             seed = self.request.get('seed','')
             
@@ -52,24 +56,42 @@ class GSLoginView( Products.Five.BrowserView ):
                 storepass = '{SHA}%s=' % password
             else:
                 storepass = password
-            self.context.cookie_authentication.credentialsChanged(user, login, storepass)
             
+            self.context.cookie_authentication.credentialsChanged(user, login, storepass)
+                        
             came_from = self.request.get('came_from', '')
+            redirect_to = ''
             if came_from:
-                self.request.response.redirect(came_from)
+                redirect_to = came_from
             else:
+                current_division = getCurrentUserDivision(self.context, user)
+                if current_division:
+                    canonicalHost = getOption(current_division, 'canonicalHost')
+                else:
+                    canonicalHost = ''
+                
                 seed = self.generateSeed()
                 passhash = hmac.new(password, login+password+seed, sha).hexdigest()
-                base_uri = self.request.BASE0
-                redirect_uri = 'http://groupserver2:8080'
-                persist = self.request.get('__ac_persistent', '')
-                if base_uri != redirect_uri:
-                    self.request.response.redirect(
-                      '%s/login.html?login=%s&ph=%s&seed=%s&__ac_persistent=%s' %
-                      (redirect_uri, login, passhash, seed, persist))
-                else:
-                    self.request.response.redirect('%s/loggedin.html' % redirect_uri)
                 
+                base_uri = self.request.BASE0
+                if canonicalHost:
+                    redirect_uri = 'http://%s' % canonicalHost
+                else:
+                    redirect_url = base_uri
+
+                persist = self.request.get('__ac_persistent', '')
+                
+                if base_uri != redirect_uri:
+                    redirect_to = ('%s/login.html?login=%s&ph=%s&seed=%s&__ac_persistent=%s' %
+                                   (redirect_uri, login, passhash, seed, persist))
+                elif not password:
+                    # PPP: Need to be updated to pragmatic template
+                    redirect_to = '%s/set_password.xml' % redirect_uri
+                else:
+                    redirect_to = '%s/loggedin.html' % redirect_uri
+            
+            self.request.response.redirect(redirect_to)                
+
         user = not not user
         password = not not password
         
