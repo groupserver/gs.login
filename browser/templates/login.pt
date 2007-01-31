@@ -4,11 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
-  metal:use-macro="context/@@groupserver_layout/page">
+  tal:define="state view/processCredentials">
+
+  <tal:block metal:use-macro="context/@@groupserver_layout/page">
+
   <head>
     
     <title metal:fill-slot="title">Login</title>
-    
+        
     <tal:block metal:fill-slot="metadata">
       <meta name="title" content="GroupServer Login"/>
       <meta name="author" content="Richard Waid" />
@@ -21,7 +24,7 @@
       <script type="text/javascript" src="/++resource++scriptaculous/scriptaculous.js">&#160;</script>
       <script type="text/javascript" src="/++resource++crypto/sha1.js">&#160;</script>
       <script type="text/javascript">
-          function onsubmit(event) {
+          function loginSubmit(event) {
               el = Event.element(event);
               
               pw = $F(el.password);
@@ -30,16 +33,17 @@
               }
 
               new_passvalue = hex_hmac_sha1(pw, ($F(el.login)+pw+$F(el.seed)));
-              alert(new_passvalue);
-              el.password.value = new_passvalue;
-              alert(el.password);
+              el.passhash.value = new_passvalue;
+              el.password.value = '';
               Event.unloadCache();
-              alert(el.id);
-              //$('loginbox').submit();
           };
-          function onload(event) { 
-              Effect.Shake($('content'));
-              // Event.observe($('loginbox'), 'submit', onsubmit, false);
+          function onload(event) {
+              if ($F($('login').failed) == 'True') {
+                  // shake the login box for a little extra affordance,
+                  // and 'cause it looks cool ;)
+                  Effect.Shake($('login'));
+              }
+              Event.observe($('login'), 'submit', loginSubmit);
           }
           Event.observe(window, 'load', onload);
       </script>
@@ -48,21 +52,32 @@
   </head>
   
   <body>
-    <div metal:fill-slot="messages"
-      tal:define="result view/process_form | nothing;
-      isError python:result and result.has_key('error') and result['error'];"
-      tal:condition="python:result and result.has_key('message')"
-      tal:attributes="class python:(isError and 'message-error') or 'message-result'"
-      tal:content="structure result/message"/>
+
+    <div metal:fill-slot="messages" class="message-error"
+      tal:condition="python:view.getState() and not view.getState()[0]">
+      <p>Please enter your login name and password, below.</p>
+      <p>This is usually neccessary for one of these reasons:</p>      
+      <ul>
+         <li>you attempted to login, but either your login name, or
+             your password were incorrect</li>
+         
+         <li>you have tried to access a link inside the restricted area,
+             but you haven't yet logged in (this could have happened if
+             you clicked on a link in an email for instance)</li>
+         
+         <li>your browser does not have cookies enabled</li>
+      </ul>
+    </div>
 
     <div metal:fill-slot="contextnavigation" />
 
-    <tal:block metal:fill-slot="body"
-               tal:define="credentials view/processCredentials">
-          <span tal:content="credentials" />
-          <form id="loginbox" onsubmit="javascript:onsubmit">
+    <tal:block metal:fill-slot="body">
+          <form id="login">
               <input type="hidden" name="seed" tal:attributes="value view/generateSeed"/>
               <input type="hidden" name="ep" tal:attributes="value view/passwordsEncrypted"/>
+              <input type="hidden" name="passhash" value=""/>
+              <input type="hidden" name="came_from" tal:attributes="value request/came_from | nothing" />
+              <input type="hidden" name="failed" tal:attributes="value python:view.state and view.state[0]"/>
               <div class="formelementtext">
                   <label class="text" for="login">Login name</label>
                   <div class="hint">Enter your login name</div>
@@ -73,8 +88,17 @@
                   <div class="hint">Enter your password</div>
                   <input id="password" class="text" type="password" value="" title="Enter your password" name="password" />
               </div>
-              <input class="text" type="submit" name="submit" value="login" />
+              <div class="formelementsinglecheck">
+                  <label for="__ac_persistent" class="singlecheck">Remember me</label>
+                  <div class="checkgroup">
+                      <input type="checkbox" title="Remember me" name="__ac_persistent" id="__ac_persistent" value="1" />
+                  </div>
+              </div>
+              <div class="formelementbutton">
+                  <input class="text" type="submit" name="submit" value="login" />
+              </div>
           </form>
     </tal:block>
   </body>
+  </tal:block>
 </html>
