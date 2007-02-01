@@ -71,21 +71,23 @@
 
     <div metal:fill-slot="contextnavigation" />
 
+    <div metal:fill-slot="breadcrumb" />
+
     <tal:block metal:fill-slot="body">
           <form id="login">
               <input type="hidden" name="seed" tal:attributes="value view/generateSeed"/>
               <input type="hidden" name="ep" tal:attributes="value view/passwordsEncrypted"/>
               <input type="hidden" name="ph" value=""/>
               <input type="hidden" name="came_from" tal:attributes="value request/came_from | nothing" />
-              <input type="hidden" name="failed" tal:attributes="value python:view.state and view.state[0]"/>
+              <input type="hidden" name="failed" tal:attributes="value python:view.state and not view.state[0]"/>
               <div class="formelementtext">
-                  <label class="text" for="login">Login name</label>
-                  <div class="hint">Enter your login name</div>
-                  <input id="login" class="text" type="text" value="" title="Enter your login name" name="login" />
+                  <label class="text" for="login">Membership number</label>
+                  <div class="hint">Enter your Institute membership number here</div>
+                  <input id="login" class="text" type="text" value="" title="Enter your Institute membership number here" name="login" />
               </div>
               <div class="formelementtext">
-                  <label class="text" for="password">Login password</label>
-                  <div class="hint">Enter your password</div>
+                  <label class="text" for="password">Password (case-sensitive)</label>
+                  <div class="hint">Enter your password here</div>
                   <input id="password" class="text" type="password" value="" title="Enter your password" name="password" />
               </div>
               <div class="formelementsinglecheck">
@@ -98,6 +100,27 @@
                   <input class="text" type="submit" name="submit" value="login" />
               </div>
           </form>
+                <p>
+        If you are logging in to the eCampus for the first time,
+        leave the password blank.
+      </p>
+
+      <p>
+        If you have <strong>forgotten your password or login name</strong>, use the 
+        <a href="/login/forgotten_password.xml">password reset</a>
+        <a href="/help/manual/#groupserver-resetting-your-password" class="helpLink" title="Resetting your password hep">[?]</a>
+        to have your login name and a new password emailed to you.
+      </p>
+
+      <p>
+
+        If you are unable to log in, please 
+        <a href="mailto:support@onlinegroups.net?subject=eCampus%20Login&amp;body=Membership%20Number:">email OnlineGroups.Net</a>,
+        specifying your Institute membership number, the steps
+        you have taken to log in, and the response that
+        you received from the eCampus.
+      </p>
+
     </tal:block>
   </body>
   </tal:block>
