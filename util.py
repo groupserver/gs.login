@@ -45,11 +45,11 @@ def getCurrentUserDivision( context, user ):
     # otherwise return the first division object, preferring non-public first
     elif division_objects:
         division_object = None
-        for division_object in division_objects:
-            division_object = division_objects[0]
-            logger.info('looking at %s' % division_object.getId())
-            logger.info('%s is_public %s' % (division_object.getId(), division_object.getProperty('is_public', 0)))
-            if not division_object.getProperty('is_public', False):
+        for div_obj in division_objects:
+            division_object = div_obj
+            logger.info('looking at %s' % div_obj.getId())
+            logger.info('%s is_public %s' % (div_obj.getId(), div_obj.getProperty('is_public', 0)))
+            if not div_obj.getProperty('is_public', False):
                 break
     
     logger.info('division %s' % division_object.getId())
