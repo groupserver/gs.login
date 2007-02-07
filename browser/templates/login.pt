@@ -4,13 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
-  tal:define="state view/processCredentials">
-  
-  <tal:block metal:use-macro="context/@@groupserver_layout/page">
-    
+  tal:define="state view/processCredentials;
+  site context/Scripts/get/division_object;
+  siteName python:view.siteInfo.get_name()">
+  <tal:block metal:use-macro="context/@@groupserver_site_home_layout/page">
     <head>
-      
-      <title metal:fill-slot="title">Login</title>
+      <title metal:fill-slot="title"><span tal:replace="siteName"/>: Login</title>
       
       <tal:block metal:fill-slot="metadata">
         <meta name="title" content="GroupServer Login"/>
@@ -51,11 +50,8 @@
           Event.observe(window, 'load', onload);
           </script>
         </tal:block>
-      
       </head>
-    
     <body>
-      
       <div metal:fill-slot="messages" class="message-error"
         tal:condition="python:view.state and not view.state[0]">
         <p>Please enter your login name and password, below.</p>
@@ -73,7 +69,6 @@
       </div>
       
       <div metal:fill-slot="contextnavigation" />
-      
       <div metal:fill-slot="breadcrumb" />
       
       <tal:block metal:fill-slot="body">
@@ -103,10 +98,10 @@
             <input class="text" type="submit" name="submit" value="login" />
           </div>
         </form>
-        
-        <p>If you are logging into the eCampus for the first time
-          in 2007:</p>
-        
+        <p>
+          If you are logging into the eCampus for the first time
+          in 2007:
+        </p>
         <dl>
           <dt>PCE 1 Candidates</dt>
           <dd>
@@ -120,7 +115,6 @@
           <dd>
             Use the same password that you used for PAS/PCE 2.
           </dd>
-          
         </dl>
         <p>
           If you have <strong>forgotten your password or login 
@@ -129,18 +123,15 @@
           <a href="/help/manual/#groupserver-resetting-your-password" 
             class="helpLink" title="Resetting your password hep">[?]</a>
           to have your login name and a new password emailed to you.
-          </p>
-        
+        </p>
         <p>
-          
           If you are unable to log in, please 
           <a href="mailto:support@onlinegroups.net?subject=eCampus%20Login&amp;body=Membership%20Number:">email OnlineGroups.Net</a>,
           specifying your Institute membership number, the steps
           you have taken to log in, and the response that
           you received from the eCampus.
-          </p>
-        
-        </tal:block>
-      </body>
-    </tal:block>
+        </p>
+      </tal:block>
+    </body>
+  </tal:block>
 </html>
