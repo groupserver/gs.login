@@ -5,10 +5,10 @@
   
   <browser:page for="*" name="login.html"
     class=".view.GSLoginView"
-    template="browser/templates/login.pt" permission="zope2.Public" />
+    template="browser/templates/default/login.pt" permission="zope2.Public" />
 
   <browser:page for="*" name="loggedin.html"
-    template="browser/templates/loggedin.pt" permission="zope2.View" />
+    template="browser/templates/default/loggedin.pt" permission="zope2.View" />
 
   <browser:pages for="*" class=".view.GSLoginRedirect" permission="zope2.View">
       <browser:page name="login_redirect" attribute="loginRedirect" />
