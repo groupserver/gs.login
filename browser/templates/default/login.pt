@@ -73,7 +73,7 @@
       <div metal:fill-slot="breadcrumb" />
       
       <tal:block metal:fill-slot="body">
-        <form id="login-form">
+        <form id="login-form" tal:attributes="action request/URL">
           <input type="hidden" name="seed" tal:attributes="value view/generateSeed"/>
           <input type="hidden" name="ep" tal:attributes="value view/passwordsEncrypted"/>
           <input type="hidden" name="ph" value=""/>
