@@ -30,6 +30,8 @@
           el = Event.element(event);
           
           pw = $F(el.password);
+          alert(pw);
+          alert(el.id);
           if ($F(el.ep) == 'True') {
           pw = b64_sha1(pw);
           }

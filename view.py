@@ -50,11 +50,12 @@ class GSLoginView( Products.Five.BrowserView ):
         if user:
             seed = self.request.get('seed','')
             pw = self.request.get('password', '')
-            if pw:
-                passhmac = hmac.new(pw, login+pw+seed, sha).hexdigest()
+            ph = self.request.get('ph', '')
+            if ph:
+                passhmac = ph
             else:
-                passhmac = self.request.get('ph', '')
-            
+                # blindly try the password, even if it's set to nothing
+                passhmac = hmac.new(pw, login+pw+seed, sha).hexdigest()            
             
             myhmac = hmac.new(password, login+password+seed, sha).hexdigest()
             

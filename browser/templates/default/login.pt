@@ -28,7 +28,9 @@
         <script type="text/javascript">
           function loginSubmit(event) {
               el = Event.element(event);
-              
+              if (el.id != 'login-form') {
+                  el = el.form;
+              };
               pw = $F(el.password);
               if ($F(el.ep) == 'True') {
                   pw = b64_sha1(pw);
