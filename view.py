@@ -68,13 +68,14 @@ class GSLoginView( Products.Five.BrowserView ):
                 storepass = password
 
             self.context.cookie_authentication.credentialsChanged(user, login, storepass)
-
+            
             came_from = self.request.get('came_from', '')
             redirect_to = ''
             if came_from:
                 redirect_to = came_from
             else:
-                redirect_to = '/login_redirect'
+                persist = request.get('__ac_persistent', '')
+                redirect_to = '/login_redirect?__ac_persistent=%s' % persist
 
             self.request.response.redirect(redirect_to)                
 
