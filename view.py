@@ -44,7 +44,6 @@ class GSLoginView( Products.Five.BrowserView ):
                     # strip off the encoding declaration and the trailing '='
                     password = password.split('}')[-1][:-1]
         
-
         state = False
         passhmac = ''
         if user:
@@ -74,9 +73,9 @@ class GSLoginView( Products.Five.BrowserView ):
             if came_from:
                 redirect_to = came_from
             else:
-                persist = request.get('__ac_persistent', '')
+                persist = self.request.get('__ac_persistent', '')
                 redirect_to = '/login_redirect?__ac_persistent=%s' % persist
-
+                
             self.request.response.redirect(redirect_to)                
 
         user = not not user
