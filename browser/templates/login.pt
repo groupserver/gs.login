@@ -9,7 +9,9 @@
   siteName python:view.siteInfo.get_name()">
   <tal:block metal:use-macro="context/@@groupserver_site_home_layout/page">
     <head>
-      <title metal:fill-slot="title"><span tal:replace="siteName"/>: Login</title>
+      <title metal:fill-slot="title">
+        <span tal:replace="siteName"/>: Login
+      </title>
       
       <tal:block metal:fill-slot="metadata">
         <meta name="title" content="GroupServer Login"/>
