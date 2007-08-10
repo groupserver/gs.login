@@ -20,10 +20,6 @@
       
       <tal:block metal:fill-slot="javascript">
         <script type="text/javascript" 
-          src="/++resource++prototype/prototype.js">&#160;</script>
-        <script type="text/javascript" 
-          src="/++resource++scriptaculous/scriptaculous.js?load=effects">&#160;</script>
-        <script type="text/javascript" 
           src="/++resource++crypto/sha1.js">&#160;</script>
         <script type="text/javascript">
           function loginSubmit(event) {
@@ -142,3 +138,4 @@
     </body>
   </tal:block>
 </html>
+
