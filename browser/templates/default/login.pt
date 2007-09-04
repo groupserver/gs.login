@@ -98,28 +98,6 @@
           </div>
         </form>
         <p>
-          If you are logging into the eCampus for the first time
-          in 2007:
-        </p>
-        <dl>
-          <dt>PCE 1 Candidates</dt>
-          <dd>
-            Leave the password blank.
-          </dd>
-          <dt>PAS/PCE 2 Candidates</dt>
-          <dd>
-            Use the same password that you used for PCE 1.
-          </dd>
-          <dt>PCE 2 Special Candidates</dt>
-          <dd>
-            Use the same password that you used for PAS/PCE 2.
-          </dd>
-          <dt>PAS/PCE 2 Facilitators</dt>
-          <dd>
-            Follow the instructions provided to you by ABEL.
-          </dd>
-        </dl>
-        <p>
           If you have <strong>forgotten your password or login 
             name</strong>, use the 
           <a href="/login/forgotten_password.xml">password reset</a>
