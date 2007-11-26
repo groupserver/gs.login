@@ -14,7 +14,8 @@
       <tal:block metal:fill-slot="metadata">
         <meta name="title" content="GroupServer Login"/>
         <meta name="author" content="Richard Waid" />
-        <meta name="description" content="This page is used to login to GroupServer" />
+        <meta name="description" 
+          content="This page is used to login to GroupServer" />
         <meta name="date" content="2007-01-29"/>
       </tal:block>
       
@@ -22,31 +23,25 @@
         <script type="text/javascript" 
           src="/++resource++crypto/sha1.js">&#160;</script>
         <script type="text/javascript">
+          jQuery.noConflict();
           function loginSubmit(event) {
-              el = Event.element(event);
-              if (el.id != 'login-form') {
-                  el = el.form;
-              };
-              pw = $F(el.password);
-              if ($F(el.ep) == 'True') {
+              var el = jQuery('#login-form');
+              var pw = jQuery('#password').val();
+              var encrypt = jQuery('#ep').val();
+              if (encrypt == 'True') {
                   pw = b64_sha1(pw);
               }
-          
-              new_passvalue = hex_hmac_sha1(pw, ($F(el.login)+pw+$F(el.seed)));
-              el.ph.value = new_passvalue;
-              el.password.value = '';
-              Event.unloadCache();
+              var loginText = jQuery('#login').val();
+              var seed = jQuery('#seed').val();
+              var new_passvalue = hex_hmac_sha1(pw, (loginText+pw+seed));
+              jQuery('#ph').val(new_passvalue);
+              jQuery('#password').val('');
+              //Event.unloadCache();
           };
           function setupLogin(event) {
-              el = $('login-form');
-              if ($F(el.failed) == 'True') {
-                  // shake the login box for a little extra feedback,
-                  // and 'cause it looks cool ;)
-                  Effect.Shake(el);
-              }
-              Event.observe(el, 'submit', loginSubmit);
+              jQuery('#login-form').submit(loginSubmit);
           }
-          Event.observe(window, 'load', setupLogin);
+          jQuery(document).ready(setupLogin);
         </script>
       </tal:block>
     </head>
@@ -72,15 +67,20 @@
       
       <tal:block metal:fill-slot="body">
         <form id="login-form" tal:attributes="action request/URL">
-          <input type="hidden" name="seed" tal:attributes="value view/generateSeed"/>
-          <input type="hidden" name="ep" tal:attributes="value view/passwordsEncrypted"/>
-          <input type="hidden" name="ph" value=""/>
-          <input type="hidden" name="came_from" tal:attributes="value request/came_from | nothing" />
-          <input type="hidden" name="failed" tal:attributes="value python:view.state and not view.state[0]"/>
+          <input type="hidden" name="seed" id="seed"
+            tal:attributes="value view/generateSeed"/>
+          <input type="hidden" name="ep" id="ep"
+            tal:attributes="value view/passwordsEncrypted"/>
+          <input type="hidden" name="ph" id="ph" value=""/>
+          <input type="hidden" name="came_from" id="came_from"
+            tal:attributes="value request/came_from | nothing" />
+          <input type="hidden" name="failed" id="failed"
+            tal:attributes="value python:view.state and not view.state[0]"/>
           <div class="formelementtext">
             <label class="text" for="login">Membership number</label>
             <div class="hint">Enter your Institute membership number here</div>
-            <input id="login" class="text" type="text" value="" title="Enter your Institute membership number here" name="login" />
+            <input name="login" id="login" class="text" type="text" value="" 
+              title="Enter your Institute membership number here" />
             </div>
           <div class="formelementtext">
             <label class="text" for="password">Password (case-sensitive)</label>
@@ -90,11 +90,13 @@
           <div class="formelementsinglecheck">
             <label for="__ac_persistent" class="singlecheck">Remember me</label>
             <div class="checkgroup">
-              <input type="checkbox" title="Remember me" name="__ac_persistent" id="__ac_persistent" value="1" />
+              <input type="checkbox" title="Remember me" 
+                name="__ac_persistent" id="__ac_persistent" value="1" />
             </div>
           </div>
           <div class="formelementbutton">
-            <input class="text" type="submit" name="submit" value="login" />
+            <input class="text" type="submit" name="submit" id="submit"
+              value="login" />
           </div>
         </form>
         <p>
