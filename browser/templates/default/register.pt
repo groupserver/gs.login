@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  metal:use-macro="context/@@groupserver_site_home_layout/page"
+  tal:define="get_site_by_id python:modules['Products.XWFCore.XWFUtils'].get_site_by_id;
+    getOption python:modules['Products.XWFCore.XWFUtils'].getOption;
+    sid request/site_id;
+    site python:get_site_by_id(context, sid);
+    siteName site/title_or_id">
+  <head>
+    <title metal:fill-slot="title"><span tal:replace="siteName"/>: Registration</title>
+    
+    <tal:block metal:fill-slot="metadata">
+      <meta name="title" content="GroupServer Registration"/>
+      <meta name="author" content="Alice Murphy" />
+      <meta name="description" 
+        content="This page is used for registration on GroupServer" />
+      <meta name="date" content="2007-12-13"/>
+    </tal:block>
+
+  </head>
+  <body>
+    <div metal:fill-slot="messages" class="message-error"
+      tal:define="error python:request.get('error', [])"
+      tal:condition="error">
+      <p>
+        <span tal:condition="python: len(error) == 1" tal:content="string:An error" />
+        <span tal:condition="python: len(error) > 1" tal:content="string:The following errors" />
+        occurred while processing your registration:
+      </p>
+      <ul>
+        <li tal:condition="python:'pname' in error">You must
+          specify your display name</li>
+        <li tal:condition="python:'required' in error">You
+          must complete all required fields</li>
+        <li tal:condition="python:'email' in error">You must
+          specify a valid email address as your password will be sent
+          to this address</li>
+        <li tal:condition="python:'email_exists' in error">The
+          email address you have specified is already registered in
+          the system. If you already have an account you should sign
+          in first.</li>
+        <li tal:condition="python:'id_exists' in error">The
+          user ID you have specified is already registered in  the
+          system. 
+          If you already have an account you should sign in first,
+          otherwise, please try another user ID. 
+          Alternatively, you can leave this field blank, and let
+          GroupServer choose an ID for you.</li>
+        <li tal:condition="python:'id_invalid' in error">The
+          user ID you have specified is not valid. User IDs should
+          only contain letters, numbers, and full-stops.</li>
+      </ul>
+    </div>
+    
+    <div metal:fill-slot="contextnavigation" />
+    <div metal:fill-slot="breadcrumb" />
+    
+    <tal:block metal:fill-slot="body"
+      tal:define="allGroupIds python:request.form.get('groups', []);
+        groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
+        groupsObject site/groups;
+        groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
+        groupNames python:map(lambda g: g.title_or_id(), groups);
+        gStr python:(len(groupNames)&gt;1 and '%s and %s' % (', '.join(groupNames[:-1]), groupNames[-1])) or (groupNames and groupNames[0] or 'OnlineGroups.Net')">
+      <heading1>
+        Registration <span tal:condition="groupIds">for 
+        <span class="group" tal:content="gStr"/></span>
+      </heading1>
+      <message/>
+
+      <p tal:condition="groupIds">
+        To register for <span class="group" tal:content="gStr"/>,
+        please fill out the following fields.
+      </p>
+      <form id="register-form" action="/Scripts/registration/register_user" method="POST">
+        <input type="hidden" name="came_from" id="came_from"
+          tal:attributes="value request/came_from | nothing" />
+        <input type="hidden" name="site_id" id="site_id"
+          tal:attributes="value request/site_id | nothing" />
+        <input type="hidden" name="groups:list" id="groups:list"
+          tal:repeat="group python:request.form.get('groups', [])"
+          tal:attributes="value python:'%s_member' % group" />
+        <div class="formelementtext">
+          <label class="text" for="preferred_name">Display Name</label>
+          <div class="hint">Please enter the name you prefer to be known by</div>
+          <input name="preferred_name" id="preferred_name" class="text" type="text"
+              value="" size="50" title="Enter your preferred name here" />
+        </div>
+        <div class="formelementtext">
+          <label class="text" for="email">Email Address</label>
+          <div class="hint">Please enter your email address</div>
+          <input name="email" id="email" class="text" type="text"
+              value="" size="50" title="Enter your email address here" />
+        </div>
+        <div class="formelementtext">
+          <label class="text" for="user_id">User Name</label>
+          <div class="hint">Enter a user name if you wish</div>
+          <input name="user_id" id="user_id" class="text" type="text"
+              value="" size="50" title="Optionally, you may enter a user name" />
+        </div>
+        <div class="formelementbutton">
+          <input class="text" type="submit" name="registration" id="registration"
+            value=" Register " />
+        </div>
+      </form>
+    </tal:block>
+  </body>
+</html>
+

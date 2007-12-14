@@ -10,8 +10,25 @@
   <browser:page for="*" name="loggedin.html"
     template="browser/templates/default/loggedin.pt" permission="zope2.View" />
 
-  <browser:pages for="*" class=".view.GSLoginRedirect" permission="zope2.View">
-      <browser:page name="login_redirect" attribute="loginRedirect" />
+  <browser:pages
+    for="*"
+    class=".view.GSLoginRedirect"
+    permission="zope2.View">
+    <browser:page
+      name="login_redirect"
+      attribute="loginRedirect" />
+  </browser:pages>
+  
+  <interface 
+    interface=".interfaces.IGSLogin"
+    type="zope.app.content.interfaces.IContentType" />
+  <browser:pages
+    for=".interfaces.IGSLogin"
+    class="Products.GSContent.view.GSContentView"
+    permission="zope2.Public">
+    <browser:page
+      name="register"
+      template="browser/templates/register.pt" />
   </browser:pages>
   
 </configure>
