@@ -5,13 +5,9 @@
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   metal:use-macro="context/@@groupserver_site_home_layout/page"
-  tal:define="get_site_by_id python:modules['Products.XWFCore.XWFUtils'].get_site_by_id;
-    getOption python:modules['Products.XWFCore.XWFUtils'].getOption;
-    sid request/site_id;
-    site python:get_site_by_id(context, sid);
-    siteName site/title_or_id">
+  >
   <head>
-    <title metal:fill-slot="title"><span tal:replace="siteName"/>: Registration</title>
+    <title metal:fill-slot="title"><span tal:replace="view/siteInfo/get_name"/>: Registration</title>
     
     <tal:block metal:fill-slot="metadata">
       <meta name="title" content="GroupServer Registration"/>
@@ -62,7 +58,7 @@
     <tal:block metal:fill-slot="body"
       tal:define="allGroupIds python:request.form.get('groups', []);
         groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
-        groupsObject site/groups;
+        groupsObject view/groupsInfo/groupsObj;
         groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
         groupNames python:map(lambda g: g.title_or_id(), groups);
         gStr python:(len(groupNames)&gt;1 and '%s and %s' % (', '.join(groupNames[:-1]), groupNames[-1])) or (groupNames and groupNames[0] or 'OnlineGroups.Net')">
@@ -80,7 +76,7 @@
         <input type="hidden" name="came_from" id="came_from"
           tal:attributes="value request/came_from | nothing" />
         <input type="hidden" name="site_id" id="site_id"
-          tal:attributes="value request/site_id | nothing" />
+          tal:attributes="value view/siteInfo/get_id | nothing" />
         <input type="hidden" name="groups:list" id="groups:list"
           tal:repeat="group python:request.form.get('groups', [])"
           tal:attributes="value python:'%s_member' % group" />
