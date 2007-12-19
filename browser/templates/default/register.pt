@@ -56,8 +56,8 @@
     <div metal:fill-slot="breadcrumb" />
     
     <tal:block metal:fill-slot="body"
-      tal:define="allGroupIds request/groups | nothing;
-        sid view/siteInfo/get_id | nothing;
+      tal:define="allGroupIds request/groups;
+        sid view/siteInfo/get_id;
         groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
         groupsObject view/groupsInfo/groupsObj;
         groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
