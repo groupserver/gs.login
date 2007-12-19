@@ -55,55 +55,57 @@
     <div metal:fill-slot="contextnavigation" />
     <div metal:fill-slot="breadcrumb" />
     
-    <tal:block metal:fill-slot="body"
-      tal:define="allGroupIds request/groups;
-        sid view/siteInfo/get_id;
-        groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
-        groupsObject view/groupsInfo/groupsObj;
-        groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
-        groupNames python:map(lambda g: g.title_or_id(), groups);
-        gStr python:(len(groupNames)&gt;1 and '%s and %s' % (', '.join(groupNames[:-1]), groupNames[-1])) or (groupNames and groupNames[0] or 'OnlineGroups.Net')">
-      <heading1>
-        Registration <span tal:condition="groupIds">for 
-        <span class="group" tal:content="gStr"/></span>
-      </heading1>
-      <message/>
+    <tal:block metal:fill-slot="body">
+      <div id="registerPage"
+        tal:define="allGroupIds request/groups;
+          sid view/siteInfo/get_id;
+          groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
+          groupsObject view/groupsInfo/groupsObj;
+          groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
+          groupNames python:map(lambda g: g.title_or_id(), groups);
+          gStr python:(len(groupNames)&gt;1 and '%s and %s' % (', '.join(groupNames[:-1]), groupNames[-1])) or (groupNames and groupNames[0] or 'OnlineGroups.Net')">
+        <heading1>
+          Registration <span tal:condition="groupIds">for 
+          <span class="group" tal:content="gStr"/></span>
+        </heading1>
+        <message/>
 
-      <p tal:condition="groupIds">
-        To register for <span class="group" tal:content="gStr"/>,
-        please fill out the following fields.
-      </p>
-      <form id="register-form" action="/Scripts/registration/register_user" method="POST">
-        <input type="hidden" name="came_from" id="came_from"
-          tal:attributes="value request/came_from | nothing" />
-        <input type="hidden" name="site_id" id="site_id"
-          tal:attributes="value sid | nothing" />
-        <input type="hidden" name="groups:list" id="groups:list"
-          tal:repeat="group request/groups | nothing"
-          tal:attributes="value python:'%s_member' % group" />
-        <div class="formelementtext">
-          <label class="text" for="preferred_name">Display Name</label>
-          <div class="hint">Please enter the name you prefer to be known by</div>
-          <input name="preferred_name" id="preferred_name" class="text" type="text"
-              value="" size="50" title="Enter your preferred name here" />
-        </div>
-        <div class="formelementtext">
-          <label class="text" for="email">Email Address</label>
-          <div class="hint">Please enter your email address</div>
-          <input name="email" id="email" class="text" type="text"
-              value="" size="50" title="Enter your email address here" />
-        </div>
-        <div class="formelementtext">
-          <label class="text" for="user_id">User Name</label>
-          <div class="hint">Enter a user name if you wish</div>
-          <input name="user_id" id="user_id" class="text" type="text"
-              value="" size="50" title="Optionally, you may enter a user name" />
-        </div>
-        <div class="formelementbutton">
-          <input class="text" type="submit" name="registration" id="registration"
-            value=" Register " />
-        </div>
-      </form>
+        <p tal:condition="groupIds">
+          To register for <span class="group" tal:content="gStr"/>,
+          please fill out the following fields.
+        </p>
+        <form id="register-form" action="/Scripts/registration/register_user" method="POST">
+          <input type="hidden" name="came_from" id="came_from"
+            tal:attributes="value request/came_from | nothing" />
+          <input type="hidden" name="site_id" id="site_id"
+            tal:attributes="value sid | nothing" />
+          <input type="hidden" name="groups:list" id="groups:list"
+            tal:repeat="group request/groups | nothing"
+            tal:attributes="value python:'%s_member' % group" />
+          <div class="formelementtext">
+            <label class="text" for="preferred_name">Display Name</label>
+            <div class="hint">Please enter the name you prefer to be known by</div>
+            <input name="preferred_name" id="preferred_name" class="text" type="text"
+                value="" size="50" title="Enter your preferred name here" />
+          </div>
+          <div class="formelementtext">
+            <label class="text" for="email">Email Address</label>
+            <div class="hint">Please enter your email address</div>
+            <input name="email" id="email" class="text" type="text"
+                value="" size="50" title="Enter your email address here" />
+          </div>
+          <div class="formelementtext">
+            <label class="text" for="user_id">User Name</label>
+            <div class="hint">Enter a user name if you wish</div>
+            <input name="user_id" id="user_id" class="text" type="text"
+                value="" size="50" title="Optionally, you may enter a user name" />
+          </div>
+          <div class="formelementbutton">
+            <input class="text" type="submit" name="registration" id="registration"
+              value=" Register " />
+          </div>
+        </form>
+      </div><!--registerPage-->
     </tal:block>
   </body>
 </html>
