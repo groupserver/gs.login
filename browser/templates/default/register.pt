@@ -20,7 +20,7 @@
   </head>
   <body>
     <div metal:fill-slot="messages" class="message-error"
-      tal:define="error python:request.get('error', [])"
+      tal:define="error request/error | nothing"
       tal:condition="error">
       <p>
         <span tal:condition="python: len(error) == 1" tal:content="string:An error" />
@@ -56,7 +56,8 @@
     <div metal:fill-slot="breadcrumb" />
     
     <tal:block metal:fill-slot="body"
-      tal:define="allGroupIds python:request.form.get('groups', []);
+      tal:define="allGroupIds request/groups | nothing;
+        sid view/siteInfo/get_id | nothing;
         groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
         groupsObject view/groupsInfo/groupsObj;
         groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
@@ -76,9 +77,9 @@
         <input type="hidden" name="came_from" id="came_from"
           tal:attributes="value request/came_from | nothing" />
         <input type="hidden" name="site_id" id="site_id"
-          tal:attributes="value view/siteInfo/get_id | nothing" />
+          tal:attributes="value sid | nothing" />
         <input type="hidden" name="groups:list" id="groups:list"
-          tal:repeat="group python:request.form.get('groups', [])"
+          tal:repeat="group request/groups | nothing"
           tal:attributes="value python:'%s_member' % group" />
         <div class="formelementtext">
           <label class="text" for="preferred_name">Display Name</label>
