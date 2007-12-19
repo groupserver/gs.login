@@ -58,7 +58,7 @@
     <tal:block metal:fill-slot="body">
       <div id="registerPage"
         tal:define="allGroupIds request/groups;
-          sid request/site_id;
+          sid string:toast;
           groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
           groupsObject view/groupsInfo/groupsObj;
           groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
