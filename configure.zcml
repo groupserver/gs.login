@@ -2,10 +2,33 @@
 <configure xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser"
   xmlns:five="http://namespaces.zope.org/five">
+
+  <browser:pages
+    for="*"
+    class="Products.GSContent.view.GSContentView"
+    permission="zope2.Public">
+
+    <browser:page
+      name="register.html"
+      template="browser/templates/default/register.pt" />
+
+  </browser:pages>
   
   <browser:page for="*" name="login.html"
     class=".view.GSLoginView"
     template="browser/templates/default/login.pt" permission="zope2.Public" />
+
+  <browser:page for="*" name="logout.html"
+    class=".view.GSLoginView"
+    template="browser/templates/default/loggedout.pt" permission="zope2.Public" />
+
+  <browser:page for="*" name="forgottenpassword.html"
+    class=".view.GSLoginView"
+    template="browser/templates/default/forgottenpassword.pt" permission="zope2.Public" />
+
+  <browser:page for="*" name="sentpassword.html"
+    class=".view.GSLoginView"
+    template="browser/templates/default/sentpassword.pt" permission="zope2.Public" />
 
   <browser:page for="*" name="loggedin.html"
     template="browser/templates/default/loggedin.pt" permission="zope2.View" />
@@ -22,13 +45,5 @@
   <interface 
     interface=".interfaces.IGSLogin"
     type="zope.app.content.interfaces.IContentType" />
-  <browser:pages
-    for=".interfaces.IGSLogin"
-    class="Products.GSContent.view.GSContentView"
-    permission="zope2.Public">
-    <browser:page
-      name="register"
-      template="browser/templates/default/register.pt" />
-  </browser:pages>
   
 </configure>

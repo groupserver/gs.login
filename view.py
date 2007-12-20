@@ -11,7 +11,6 @@ from util import getDivisionObjects, isGSUser, getCurrentUserDivision
 def seedGenerator( ):
     return sha.new(str(time.time())).hexdigest()
 
-
 class GSLoginView( Products.Five.BrowserView ):
     ''' View object for logging into a groupserver site.
 
@@ -37,13 +36,15 @@ class GSLoginView( Products.Five.BrowserView ):
         user = None
         password = None
         if login:
-            user = self.context.acl_users.getUser(login)
+            if login.find('@') > 0:
+                user = self.context.acl_users.get_userByEmail(login)
+            if not user:
+                user = self.context.acl_users.getUser(login)
             if user and isGSUser( user ): # check that we are actually a GSUser too
                 password = user.get_password()
                 if self.passwordsEncrypted():
                     # strip off the encoding declaration and the trailing '='
-                    password = password.split('}')[-1][:-1]
-        
+                    password = password.split('}')[-1][:-1]        
         state = False
         passhmac = ''
         if user:
@@ -66,7 +67,7 @@ class GSLoginView( Products.Five.BrowserView ):
             else:
                 storepass = password
 
-            self.context.cookie_authentication.credentialsChanged(user, login, storepass)
+            self.context.cookie_authentication.credentialsChanged(user, str(user.getId()), storepass)
             
             came_from = self.request.get('came_from', '')
             redirect_to = ''

@@ -9,17 +9,18 @@
   siteName python:view.siteInfo.get_name()">
   <tal:block metal:use-macro="context/@@groupserver_site_home_layout/page">
     <head>
-      <title metal:fill-slot="title"><span tal:replace="siteName"/>: Login</title>
+      <title metal:fill-slot="title">
+        <span tal:replace="siteName"/>: Login
+      </title>
       
       <tal:block metal:fill-slot="metadata">
         <meta name="title" content="GroupServer Login"/>
         <meta name="author" content="Richard Waid" />
-        <meta name="description" 
-          content="This page is used to login to GroupServer" />
+        <meta name="description" content="This page is used to login to GroupServer" />
         <meta name="date" content="2007-01-29"/>
       </tal:block>
       
-      <tal:block metal:fill-slot="javascript">
+    <tal:block metal:fill-slot="javascript">
         <script type="text/javascript" 
           src="/++resource++crypto/sha1.js">&#160;</script>
         <script type="text/javascript">
@@ -44,9 +45,11 @@
           jQuery(document).ready(setupLogin);
         </script>
       </tal:block>
-    </head>
+
+      </head>
     <body>
-      <div metal:fill-slot="messages" class="message-error"
+      <div metal:fill-slot="messages" tal:omit-tag="">
+        <div class="message-error"
         tal:condition="python:view.state and not view.state[0]">
         <p>Please enter your login name and password, below.</p>
         <p>This is usually neccessary for one of these reasons:</p>      
@@ -60,27 +63,47 @@
           
           <li>your browser does not have cookies enabled</li>
         </ul>
+        </div>
+
+        <div class="message-result" tal:condition="python:request.has_key('error') and 'register_thanks' in request.get('error',[])">
+          <p>
+          Your registration has been successful.
+          </p>
+
+          <p>
+          You will be emailed a confirmation email, with a new temporary password. Once
+          you receive this, please log into the site and confirm your registration.
+          </p>
+        </div>
+
       </div>
+
+
+      <message type="result" tal:condition="python:request.has_key('error') and 'register_thanks' in request.get('error',[])">
+        <paragraph>
+        Your registration has been successful.
+        </paragraph>
+        <paragraph>
+        You will be emailed a confirmation email, with a new temporary password. Once
+        you receive this, please log into the site and confirm your registration.
+        </paragraph>
+      </message>
+
       
       <div metal:fill-slot="contextnavigation" />
       <div metal:fill-slot="breadcrumb" />
       
       <tal:block metal:fill-slot="body">
         <form id="login-form" tal:attributes="action request/URL">
-          <input type="hidden" name="seed" id="seed"
-            tal:attributes="value view/generateSeed"/>
-          <input type="hidden" name="ep" id="ep"
-            tal:attributes="value view/passwordsEncrypted"/>
-          <input type="hidden" name="ph" id="ph" value=""/>
-          <input type="hidden" name="came_from" id="came_from"
-            tal:attributes="value request/came_from | nothing" />
-          <input type="hidden" name="failed" id="failed"
-            tal:attributes="value python:view.state and not view.state[0]"/>
+          <input type="hidden" id="seed" name="seed" tal:attributes="value view/generateSeed"/>
+          <input type="hidden" id="ep" name="ep" tal:attributes="value view/passwordsEncrypted"/>
+          <input type="hidden" id="ph" name="ph" value=""/>
+          <input type="hidden" id="came_from" name="came_from" tal:attributes="value request/came_from | nothing" />
+          <input type="hidden" id="failed" name="failed" tal:attributes="value python:view.state and not view.state[0]"/>
           <div class="formelementtext">
-            <label class="text" for="login">Membership number</label>
-            <div class="hint">Enter your Institute membership number here</div>
-            <input name="login" id="login" class="text" type="text" value="" 
-              title="Enter your Institute membership number here" />
+            <label class="text" for="login">Email Address</label>
+            <div class="hint">Enter your email address here</div>
+            <input id="login" class="text" type="text" value="" title="Enter your email address here" name="login" />
             </div>
           <div class="formelementtext">
             <label class="text" for="password">Password (case-sensitive)</label>
@@ -90,32 +113,29 @@
           <div class="formelementsinglecheck">
             <label for="__ac_persistent" class="singlecheck">Remember me</label>
             <div class="checkgroup">
-              <input type="checkbox" title="Remember me" 
-                name="__ac_persistent" id="__ac_persistent" value="1" />
+              <input type="checkbox" title="Remember me" name="__ac_persistent" id="__ac_persistent" value="1" />
             </div>
           </div>
           <div class="formelementbutton">
-            <input class="text" type="submit" name="submit" id="submit"
-              value="login" />
+            <input class="text" type="submit" name="submit" value="login" />
           </div>
         </form>
         <p>
           If you have <strong>forgotten your password or login 
             name</strong>, use the 
-          <a href="/login/forgotten_password.xml">password reset</a>
+          <a href="/forgottenpassword.html">password reset</a>
           <a href="/help/manual/#groupserver-resetting-your-password" 
             class="helpLink" title="Resetting your password hep">[?]</a>
           to have your login name and a new password emailed to you.
         </p>
         <p>
           If you are unable to log in, please 
-          <a href="mailto:support@onlinegroups.net?subject=eCampus%20Login&amp;body=Membership%20Number:">email OnlineGroups.Net</a>,
-          specifying your Institute membership number, the steps
+          <a href="mailto:support@onlinegroups.net">email OnlineGroups support</a>,
+          specifying your login email address, the steps
           you have taken to log in, and the response that
-          you received from the eCampus.
+          you received from the site.
         </p>
       </tal:block>
     </body>
   </tal:block>
 </html>
-

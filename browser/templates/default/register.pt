@@ -58,10 +58,11 @@
     <tal:block metal:fill-slot="body">
       <div id="registerPage"
         tal:define="allGroupIds request/groups;
-          sid string:toast;
-          groupIds python:filter(lambda g: g.strip() != sid, allGroupIds);
+          sid python:view.siteInfo.get_id();
+          sidgids python:zip([sid]*len(allGroupIds), allGroupIds);
+          groupIds python:map(lambda x: x[1], filter(lambda g: g[1].strip() != g[0], sidgids));
           groupsObject view/groupsInfo/groupsObj;
-          groups python:map(lambda gId: getattr(groupsObject, gId), groupIds);
+          groups python:[getattr(groupsObject, gId) for gId in groupIds];
           groupNames python:map(lambda g: g.title_or_id(), groups);
           gStr python:(len(groupNames)&gt;1 and '%s and %s' % (', '.join(groupNames[:-1]), groupNames[-1])) or (groupNames and groupNames[0] or 'OnlineGroups.Net')">
         <heading1>
