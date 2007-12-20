@@ -31,15 +31,12 @@ def getCurrentUserDivision( context, user ):
     division_objects = getDivisionObjects(context, user)
     division_ids = map(lambda x: x.getId(), division_objects)
     
-    logger.info('divisions: %s' % division_ids)
-    
     division_object = None
     # if we have a currentDivision, return the corresponding object
     if curr_did in division_ids:
         for obj in division_objects:
             if obj.getId() == curr_did:
                 division_object = obj
-                logger.info('found division 1')
                 break
     
     # otherwise return the first division object, preferring non-public first
@@ -47,12 +44,9 @@ def getCurrentUserDivision( context, user ):
         division_object = None
         for div_obj in division_objects:
             division_object = div_obj
-            logger.info('looking at %s' % div_obj.getId())
-            logger.info('%s is_public %s' % (div_obj.getId(), div_obj.getProperty('is_public', 0)))
             if not div_obj.getProperty('is_public', False):
                 break
     
-    logger.info('division %s' % division_object.getId())
     # otherwise, well, not much we can do
     return division_object
 
