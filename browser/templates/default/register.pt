@@ -95,12 +95,6 @@
             <input name="email" id="email" class="text" type="text"
                 value="" size="50" title="Enter your email address here" />
           </div>
-          <div class="formelementtext">
-            <label class="text" for="user_id">User Name</label>
-            <div class="hint">Enter a user name if you wish</div>
-            <input name="user_id" id="user_id" class="text" type="text"
-                value="" size="50" title="Optionally, you may enter a user name" />
-          </div>
           <div class="formelementbutton">
             <input class="text" type="submit" name="registration" id="registration"
               value=" Register " />
