@@ -23,6 +23,8 @@
     <tal:block metal:fill-slot="javascript">
         <script type="text/javascript" 
           src="/++resource++crypto/sha1.js">&#160;</script>
+        <script type="text/javascript"
+          src="/++resource++popup_help-20071218.js">&#160;</script>
         <script type="text/javascript">
           jQuery.noConflict();
           function loginSubmit(event) {
@@ -43,6 +45,10 @@
               jQuery('#login-form').submit(loginSubmit);
           }
           jQuery(document).ready(setupLogin);
+          jQuery.noConflict()
+          jQuery(document).ready( function () {
+              GSPopupFormHelp.init('#login-form');
+          });
         </script>
       </tal:block>
 
@@ -100,24 +106,38 @@
           <input type="hidden" id="ph" name="ph" value=""/>
           <input type="hidden" id="came_from" name="came_from" tal:attributes="value request/came_from | nothing" />
           <input type="hidden" id="failed" name="failed" tal:attributes="value python:view.state and not view.state[0]"/>
-          <div class="formelementtext">
-            <label class="text" for="login">Email Address</label>
-            <div class="hint">Enter your email address here</div>
-            <input id="login" class="text" type="text" value="" title="Enter your email address here" name="login" />
-            </div>
-          <div class="formelementtext">
-            <label class="text" for="password">Password (case-sensitive)</label>
-            <div class="hint">Enter your password here</div>
-            <input id="password" class="text" type="password" value="" title="Enter your password" name="password" />
-            </div>
-          <div class="formelementsinglecheck">
-            <label for="__ac_persistent" class="singlecheck">Remember me</label>
+          
+          <div class="formelementtext form-widget">
+            <label class="text" 
+              title="Enter the email address you use with this site"
+              for="login">Email Address</label>
+            <input id="login"  name="login" class="text" type="text" 
+              value="" title="Enter your email address here" />
+          </div>
+            
+          <div class="formelementtext form-widget">
+            <label class="text" 
+              title="Enter the password that you use with this site (case-sensitive)"
+              for="password">Password</label>
+            <input id="password" class="text" 
+              type="password" name="password" 
+              value="" title="Enter your password"/>
+          </div>
+          
+          <div class="formelementsinglecheck form-widget">
             <div class="checkgroup">
-              <input type="checkbox" title="Remember me" name="__ac_persistent" id="__ac_persistent" value="1" />
+              <input type="checkbox" title="Remember me"
+                name="__ac_persistent" id="__ac_persistent" value="1" />
+              <label for="__ac_persistent"
+                title="Check this if you want to automatically log in next time you visit this site. Do not check this if you are using a public terminal!"
+                class="singlecheck">Remember me</label>
             </div>
           </div>
-          <div class="formelementbutton">
-            <input class="text" type="submit" name="submit" value="login" />
+          <div class="buttons">
+            <div class="formelementbutton">
+              <input class="button" type="submit" name="submit" 
+                value="Login" />
+            </div>
           </div>
         </form>
         <p>
@@ -135,7 +155,8 @@
           you have taken to log in, and the response that
           you received from the site.
         </p>
-      </tal:block>
+      </tal:block>        
     </body>
   </tal:block>
 </html>
+
