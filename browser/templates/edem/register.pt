@@ -10,11 +10,11 @@
     <title metal:fill-slot="title"><span tal:replace="view/siteInfo/get_name"/>: Registration</title>
     
     <tal:block metal:fill-slot="metadata">
-      <meta name="title" content="GroupServer Registration"/>
+      <meta name="title" content="eDemocracy Registration"/>
       <meta name="author" content="Alice Murphy" />
       <meta name="description" 
-        content="This page is used for registration on GroupServer" />
-      <meta name="date" content="2007-12-13"/>
+        content="This page is used for registration on eDemocracy" />
+      <meta name="date" content="2007-01-09"/>
     </tal:block>
 
   </head>
@@ -28,6 +28,10 @@
         occurred while processing your registration:
       </p>
       <ul>
+        <li tal:condition="python:'fname' in error">You must
+          specify your first name</li>
+        <li tal:condition="python:'lname' in error">You must
+          specify your last name</li>
         <li tal:condition="python:'pname' in error">You must
           specify your display name</li>
         <li tal:condition="python:'required' in error">You
@@ -70,11 +74,23 @@
           <span class="group" tal:content="gStr"/></span>
         </h1>
         <message/>
-
+        
+        <h3>Use Your Real Name and Be Civil</h3>
+        <p>
+          By registering you agree to abide by 
+          <a href="http://e-democracy.org/rules">E-Democracy.Org's official rules</a>
+          and each forum's specific charter and scope. You must use 
+          your real name and participate in civil manner.
+        </p>
+        <p>
+          Are you already a member of another forum hosted on this site?
+          If yes, please <a href="../../login.html">log in here</a>.
+        </p>
         <p tal:condition="groupIds">
           To register for <span class="group" tal:content="gStr"/>,
           please fill out the following fields.
         </p>
+        
         <form id="register-form" action="/Scripts/registration/register_user" method="POST">
           <input type="hidden" name="came_from" id="came_from"
             tal:attributes="value request/came_from | nothing" />
@@ -83,6 +99,18 @@
           <input type="hidden" name="groups:list" id="groups:list"
             tal:repeat="group request/groups | nothing"
             tal:attributes="value python:'%s_member' % group" />
+          <div class="formelementtext">
+            <label class="text" for="first_name">First Name</label>
+            <div class="hint">Please enter your first name</div>
+            <input name="first_name" id="first_name" class="text" type="text"
+                value="" size="50" title="Enter your first name here" />
+          </div>
+          <div class="formelementtext">
+            <label class="text" for="last_name">Last Name</label>
+            <div class="hint">Please enter your last name</div>
+            <input name="last_name" id="last_name" class="text" type="text"
+                value="" size="50" title="Enter your last name here" />
+          </div>
           <div class="formelementtext">
             <label class="text" for="preferred_name">Display Name</label>
             <div class="hint">Please enter the name you prefer to be known by</div>

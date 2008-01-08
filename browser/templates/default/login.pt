@@ -6,7 +6,8 @@
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   tal:define="state view/processCredentials;
   site context/Scripts/get/division_object;
-  siteName python:view.siteInfo.get_name()">
+  siteName python:view.siteInfo.get_name();
+  siteId python:view.siteInfo.get_id()">
   <tal:block metal:use-macro="context/@@groupserver_site_home_layout/page">
     <head>
       <title metal:fill-slot="title">
@@ -148,9 +149,10 @@
             class="helpLink" title="Resetting your password hep">[?]</a>
           to have your login name and a new password emailed to you.
         </p>
-        <p>
+        <p tal:define="get_support_email python:modules['Products.XWFCore.XWFUtils'].get_support_email">
           If you are unable to log in, please 
-          <a href="mailto:support@onlinegroups.net">email OnlineGroups support</a>,
+          <a tal:attributes="href python:'mailto:%s' % get_support_email(context, siteId)">email
+          <span tal:content="siteName"/> support</a>,
           specifying your login email address, the steps
           you have taken to log in, and the response that
           you received from the site.
