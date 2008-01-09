@@ -58,15 +58,15 @@
       <div metal:fill-slot="messages" tal:omit-tag="">
         <div class="message-error"
         tal:condition="python:view.state and not view.state[0]">
-        <p>Please enter your login name and password, below.</p>
-        <p>This is usually neccessary for one of these reasons:</p>      
+        <p>Please enter your email address and password below.</p>
+        <p>This is usually neccessary for one of these reasons:</p>
         <ul>
-          <li>you attempted to login, but either your login name, or
-            your password were incorrect</li>
+          <li>you attempted to login, but either your email address or
+            your password was incorrect</li>
           
-          <li>you have tried to access a link inside the restricted area,
+          <li>you tried to access a link inside the restricted area,
             but you haven't yet logged in (this could have happened if
-            you clicked on a link in an email for instance)</li>
+            you clicked on a link in an email, for instance)</li>
           
           <li>your browser does not have cookies enabled</li>
         </ul>
@@ -142,12 +142,11 @@
           </div>
         </form>
         <p>
-          If you have <strong>forgotten your password or login 
-            name</strong>, use the 
+          If you have <strong>forgotten your password</strong>, use the 
           <a href="/forgottenpassword.html">password reset</a>
           <a href="/help/manual/#groupserver-resetting-your-password" 
-            class="helpLink" title="Resetting your password hep">[?]</a>
-          to have your login name and a new password emailed to you.
+            class="helpLink" title="Help with resetting your password">[?]</a>
+          to have a new password emailed to you.
         </p>
         <p tal:define="get_support_email python:modules['Products.XWFCore.XWFUtils'].get_support_email">
           If you are unable to log in, please 
