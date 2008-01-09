@@ -26,6 +26,8 @@
           src="/++resource++crypto/sha1.js">&#160;</script>
         <script type="text/javascript"
           src="/++resource++popup_help-20071218.js">&#160;</script>
+        <script type="text/javascript"
+          src="/++resource++check_required-20071214.js">&#160;</script>
         <script type="text/javascript">
           jQuery.noConflict();
           function loginSubmit(event) {
@@ -49,6 +51,7 @@
           jQuery.noConflict()
           jQuery(document).ready( function () {
               GSPopupFormHelp.init('#login-form');
+              GSCheckRequired.init(['#login', '#password'], '#loginButton');
           });
         </script>
       </tal:block>
@@ -101,6 +104,8 @@
       <div metal:fill-slot="breadcrumb" />
       
       <tal:block metal:fill-slot="body">
+        <h1>Login</h1>
+
         <form id="login-form" tal:attributes="action request/URL">
           <input type="hidden" id="seed" name="seed" tal:attributes="value view/generateSeed"/>
           <input type="hidden" id="ep" name="ep" tal:attributes="value view/passwordsEncrypted"/>
@@ -108,15 +113,15 @@
           <input type="hidden" id="came_from" name="came_from" tal:attributes="value request/came_from | nothing" />
           <input type="hidden" id="failed" name="failed" tal:attributes="value python:view.state and not view.state[0]"/>
           
-          <div class="formelementtext form-widget required">
+          <div class="form-widget required">
             <label class="text" 
-              title="Enter the email address you use with this site"
+              title="Enter the email address, or login name, you use with your forums on e-Democracy.org"
               for="login">Email Address</label>
             <input id="login"  name="login" class="text" type="text" 
               value="" title="Enter your email address here" />
           </div>
             
-          <div class="formelementtext form-widget required">
+          <div class="form-widget required">
             <label class="text" 
               title="Enter the password that you use with this site (case-sensitive)"
               for="password">Password</label>
@@ -130,12 +135,13 @@
               class="checkboxType" value="" 
               name="__ac_persistent" id="__ac_persistent" />
             <label for="__ac_persistent" class="checkboxLabel"
-              title="Check this if you want to automatically log in next time you visit this site. Do not check this if you are using a public terminal!">Remember me</label>
+              title="Check this if you want to automatically log in next time you visit this site from this computer. Do not check this if you are using a public terminal!">Remember me</label>
           </div>
 
           <div class="buttons">
             <div class="formelementbutton">
               <input class="button" type="submit" name="submit" 
+                id="loginButton"
                 value="Login" />
             </div>
           </div>
