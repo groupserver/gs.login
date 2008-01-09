@@ -115,7 +115,7 @@
           
           <div class="form-widget required">
             <label class="text" 
-              title="Enter the email address, or login name, you use with your forums on e-Democracy.org"
+              title="Enter the email address, or login name, you use with your forums on this site"
               for="login">Email Address</label>
             <input id="login"  name="login" class="text" type="text" 
               value="" title="Enter your email address here" />
