@@ -108,7 +108,7 @@
           <input type="hidden" id="came_from" name="came_from" tal:attributes="value request/came_from | nothing" />
           <input type="hidden" id="failed" name="failed" tal:attributes="value python:view.state and not view.state[0]"/>
           
-          <div class="formelementtext form-widget">
+          <div class="formelementtext form-widget required">
             <label class="text" 
               title="Enter the email address you use with this site"
               for="login">Email Address</label>
@@ -116,7 +116,7 @@
               value="" title="Enter your email address here" />
           </div>
             
-          <div class="formelementtext form-widget">
+          <div class="formelementtext form-widget required">
             <label class="text" 
               title="Enter the password that you use with this site (case-sensitive)"
               for="password">Password</label>
@@ -125,15 +125,14 @@
               value="" title="Enter your password"/>
           </div>
           
-          <div class="formelementsinglecheck form-widget">
-            <div class="checkgroup">
-              <input type="checkbox" title="Remember me"
-                name="__ac_persistent" id="__ac_persistent" value="1" />
-              <label for="__ac_persistent"
-                title="Check this if you want to automatically log in next time you visit this site. Do not check this if you are using a public terminal!"
-                class="singlecheck">Remember me</label>
-            </div>
+          <div class="form-widget not-required">
+            <input type="checkbox" title="Remember me" 
+              class="checkboxType" value="" 
+              name="__ac_persistent" id="__ac_persistent" />
+            <label for="__ac_persistent" class="checkboxLabel"
+              title="Check this if you want to automatically log in next time you visit this site. Do not check this if you are using a public terminal!">Remember me</label>
           </div>
+
           <div class="buttons">
             <div class="formelementbutton">
               <input class="button" type="submit" name="submit" 
