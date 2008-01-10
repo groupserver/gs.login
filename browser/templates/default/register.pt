@@ -87,13 +87,15 @@
             <label class="text" for="preferred_name">Display Name</label>
             <div class="hint">Please enter the name you prefer to be known by</div>
             <input name="preferred_name" id="preferred_name" class="text" type="text"
-                value="" size="50" title="Enter your preferred name here" />
+                tal:attributes="value request/preferred_name" size="50"
+                title="Enter your preferred name here" />
           </div>
           <div class="formelementtext">
             <label class="text" for="email">Email Address</label>
             <div class="hint">Please enter your email address</div>
             <input name="email" id="email" class="text" type="text"
-                value="" size="50" title="Enter your email address here" />
+                tal:attributes="value request/email" size="50"
+                title="Enter your email address here" />
           </div>
           <div class="formelementbutton">
             <input class="text" type="submit" name="registration" id="registration"
