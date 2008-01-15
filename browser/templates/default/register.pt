@@ -37,8 +37,7 @@
           to this address</li>
         <li tal:condition="python:'email_exists' in error">The
           email address you have specified is already registered in
-          the system. If you already have an account you should sign
-          in first.</li>
+          the system. If you already have an account, you should sign in.</li>
         <li tal:condition="python:'id_exists' in error">The
           user ID you have specified is already registered in  the
           system. 
@@ -87,14 +86,14 @@
             <label class="text" for="preferred_name">Display Name</label>
             <div class="hint">Please enter the name you prefer to be known by</div>
             <input name="preferred_name" id="preferred_name" class="text" type="text"
-                tal:attributes="value request/preferred_name" size="50"
+                tal:attributes="value request/preferred_name | nothing" size="50"
                 title="Enter your preferred name here" />
           </div>
           <div class="formelementtext">
             <label class="text" for="email">Email Address</label>
             <div class="hint">Please enter your email address</div>
             <input name="email" id="email" class="text" type="text"
-                tal:attributes="value request/email" size="50"
+                tal:attributes="value request/email | nothing" size="50"
                 title="Enter your email address here" />
           </div>
           <div class="formelementbutton">
