@@ -97,7 +97,7 @@
                 title="Enter your email address here" />
           </div>
           <div class="formelementbutton">
-            <input class="text" type="submit" name="registration" id="registration"
+            <input class="button" type="submit" name="registration" id="registration"
               value=" Register " />
           </div>
         </form>
