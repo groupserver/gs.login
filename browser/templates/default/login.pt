@@ -148,7 +148,7 @@
         </form>
         <p>
           If you have <strong>forgotten your password</strong>, use the 
-          <a href="/forgottenpassword.html">password reset</a>
+          <a href="/reset_password.html">password reset</a>
           <a href="/help/manual/#groupserver-resetting-your-password" 
             class="helpLink" title="Help with resetting your password">[?]</a>
           to have a new password emailed to you.
