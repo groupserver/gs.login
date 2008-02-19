@@ -146,21 +146,22 @@
             </div>
           </div>
         </form>
-        <p>
-          If you have <strong>forgotten your password</strong>, use the 
-          <a href="/reset_password.html">password reset</a>
-          <a href="/help/manual/#groupserver-resetting-your-password" 
-            class="helpLink" title="Help with resetting your password">[?]</a>
-          to have a new password emailed to you.
-        </p>
-        <p tal:define="get_support_email python:modules['Products.XWFCore.XWFUtils'].get_support_email">
-          If you are unable to log in, please 
-          <a tal:attributes="href python:'mailto:%s' % get_support_email(context, siteId)">email
-          <span tal:content="siteName"/> support</a>,
-          specifying your login email address, the steps
-          you have taken to log in, and the response that
-          you received from the site.
-        </p>
+        <dl>
+          <dt>Forgotten password</dt>
+          <dd>
+            <a href="/reset_password.html">Reset your password</a> if you
+            cannot remember it.
+          </dd>
+          <dt>Unable to login</dt>
+          <dd tal:define="get_support_email python:modules['Products.XWFCore.XWFUtils'].get_support_email">
+            If you are unable to log in, please 
+            <a tal:attributes="href python:'mailto:%s' % get_support_email(context, siteId)">email
+            <span tal:content="siteName"/> support</a>,
+            specifying your login email address, the steps
+            you have taken to log in, and the response that
+            you received from the site.
+          </dd>
+        </dl>
       </tal:block>        
     </body>
   </tal:block>
