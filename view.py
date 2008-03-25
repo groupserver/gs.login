@@ -1,3 +1,4 @@
+# coding=utf-8
 '''GroupServer Login
 
 '''
@@ -6,7 +7,11 @@ import sha, hmac
 import time
 
 from Products.XWFCore.XWFUtils import getOption
+from Products.CustomUserFolder.interfaces import IGSUserInfo
 from util import getDivisionObjects, isGSUser, getCurrentUserDivision
+
+import logging
+log = logging.getLogger('GSLogin')
 
 def seedGenerator( ):
     return sha.new(str(time.time())).hexdigest()
@@ -69,6 +74,12 @@ class GSLoginView( Products.Five.BrowserView ):
 
             self.context.cookie_authentication.credentialsChanged(user, str(user.getId()), storepass)
             
+            userInfo = IGSUserInfo(user)
+            m = 'Logging in %s (%s) to %s (%s)' %\
+              (userInfo.name, userInfo.id, 
+               self.siteInfo.name, self.siteInfo.id)
+            log.info(m)
+
             came_from = self.request.get('came_from', '')
             redirect_to = ''
             if came_from:
@@ -129,8 +140,14 @@ class GSLoginRedirect( Products.Five.BrowserView ):
         else:
             redirect_to = '%s/' % redirect_uri
 
-                        
-
+        userInfo = IGSUserInfo(user)
+        m = 'loginRedirect: Redirecting %s (%s) to <%s> on %s (%s)'%\
+          (userInfo.name, userInfo.id, redirect_to, 
+           self.siteInfo.name, self.siteInfo.id)
+        log.info(m)
+        m = 'loginRedirect: %s (%s) set Remember Me to "%s"'%\
+          (userInfo.name, userInfo.id, persist)
+        log.info(m)
         
         self.request.response.redirect(redirect_to)
 
