@@ -132,7 +132,7 @@
           
           <div class="form-widget not-required">
             <input type="checkbox" title="Remember me" 
-              class="checkboxType" value="" 
+              class="checkboxType" value="1" 
               name="__ac_persistent" id="__ac_persistent" />
             <label for="__ac_persistent" class="checkboxLabel"
               title="Check this if you want to automatically log in next time you visit this site from this computer. Do not check this if you are using a public terminal!">Remember me</label>
