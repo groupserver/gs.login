@@ -88,7 +88,11 @@ class GSLoginView( Products.Five.BrowserView ):
                 persist = self.request.get('__ac_persistent', '')
                 redirect_to = '/login_redirect?__ac_persistent=%s' % persist
                 
-            self.request.response.redirect(redirect_to)                
+            self.request.response.redirect(redirect_to)
+        
+        m = 'Not logging in user "%s" with password of length %d'%\
+          (login, password and len(password) or 0)
+        log.info(m)
 
         user = not not user
         password = not not password
