@@ -39,6 +39,7 @@ class GSLoginView( Products.Five.BrowserView ):
             return
         
         user = None
+        userInfo = None
         password = None
         if login:
             if login.find('@') > 0:
@@ -52,9 +53,10 @@ class GSLoginView( Products.Five.BrowserView ):
                     password = password.split('}')[-1][:-1]        
         state = False
         passhmac = ''
+         # We always want the password, for logging
         if user:
-            seed = self.request.get('seed','')
             pw = self.request.get('password', '')
+            seed = self.request.get('seed','')
             ph = self.request.get('ph', '')
             if ph:
                 passhmac = ph
@@ -66,13 +68,14 @@ class GSLoginView( Products.Five.BrowserView ):
             
             state = passhmac == myhmac or False
         
-        if state == True:
+        if state:
             if self.passwordsEncrypted():
                 storepass = '{SHA}%s=' % password
             else:
                 storepass = password
 
-            self.context.cookie_authentication.credentialsChanged(user, str(user.getId()), storepass)
+            self.context.cookie_authentication.credentialsChanged(user, 
+              str(user.getId()), storepass)
             
             userInfo = IGSUserInfo(user)
             m = 'Logging in %s (%s) to %s (%s)' %\
@@ -89,11 +92,18 @@ class GSLoginView( Products.Five.BrowserView ):
                 redirect_to = '/login_redirect?__ac_persistent=%s' % persist
                 
             self.request.response.redirect(redirect_to)
-        
-        m = 'Not logging in user "%s" with password of length %d'%\
-          (login, password and len(password) or 0)
-        log.info(m)
-
+        else:
+            m = 'Not logging in user "%s" to %s (%s)' % (login, 
+              self.siteInfo.name, self.siteInfo.id)
+            log.info(m)
+            if user and not state:
+                userInfo = IGSUserInfo(user)
+                m = 'User %s (%s) exists, so bad password' % \
+                  (userInfo.name, userInfo.id)
+            else:
+                m = 'No such user "%s"' % login
+            log.info(m)
+                
         user = not not user
         password = not not password
         
