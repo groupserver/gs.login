@@ -32,6 +32,17 @@ class GSLoginView( Products.Five.BrowserView ):
     def generateSeed( self ):
         return seedGenerator()
 
+    @property
+    def anonomous_viewing_page( self ):
+        assert self.request
+        assert self.context
+
+        roles = self.request.AUTHENTICATED_USER.getRolesInContext(self.context)
+        retval = 'Authenticated' not in roles
+        
+        assert type(retval) == bool
+        return retval
+
     def processCredentials( self ):
         login = self.request.get('login', '')
         
