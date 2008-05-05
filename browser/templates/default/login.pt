@@ -53,6 +53,7 @@
               GSPopupFormHelp.init('#login-form');
               GSCheckRequired.init(['#login', '#password'], '#loginButton');
           });
+          jQuery('#login').focus();
         </script>
       </tal:block>
 
@@ -165,7 +166,7 @@
         </tal:block><!--AnonView-->
         <tal:block condition="not:view/anonomous_viewing_page">
           <h1>Permission Denied</h1>
-          <p tal:define="url python:request.form['came_from']">
+          <p tal:define="url python:request.form.get('came_from', '')">
             You do not have permission to see the page you tried to view:
             <a tal:attributes="href url"
               href="#"><code class="url" tal:content="url">#</code>.</a>
