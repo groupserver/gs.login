@@ -47,7 +47,7 @@ class GSLoginView( Products.Five.BrowserView ):
         url = self.request.URL0
         baseLoginURL = '%s/login.html' % self.siteInfo.url
         
-        retval = (url == baseLoginURL)
+        retval = (url == baseLoginURL and not(self.request.get('came_from', '')))
         assert type(retval) == bool
         return retval
 
