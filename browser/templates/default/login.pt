@@ -75,32 +75,8 @@
           <li>your browser does not have cookies enabled</li>
         </ul>
         </div>
-
-        <div class="message-result" tal:condition="python:request.has_key('error') and 'register_thanks' in request.get('error',[])">
-          <p>
-          Your registration has been successful.
-          </p>
-
-          <p>
-          You will be emailed a confirmation email, with a new temporary password. Once
-          you receive this, please log into the site and confirm your registration.
-          </p>
-        </div>
-
       </div>
 
-
-      <message type="result" tal:condition="python:request.has_key('error') and 'register_thanks' in request.get('error',[])">
-        <paragraph>
-        Your registration has been successful.
-        </paragraph>
-        <paragraph>
-        You will be emailed a confirmation email, with a new temporary password. Once
-        you receive this, please log into the site and confirm your registration.
-        </paragraph>
-      </message>
-
-      
       <div metal:fill-slot="contextnavigation" />
       <div metal:fill-slot="breadcrumb" />
       
@@ -165,16 +141,28 @@
           </dl>
         </tal:block><!--AnonView-->
         <tal:block condition="not:view/anonomous_viewing_page">
-          <h1>Permission Denied</h1>
-          <p tal:define="url python:request.form.get('came_from', '')">
-            You do not have permission to see the page you tried to view:
-            <a tal:attributes="href url"
-              href="#"><code class="url" tal:content="url">#</code>.</a>
-            If you think you should have permission to view this page,
-            <a tal:attributes="href python:'mailto:%s?Subject=Permission Denied: %s' %(view.siteInfo.get_support_email(), url)" 
-              href="#">contact support.</a>
-          </p>
-        </tal:block>
+          <tal:block condition="view/logged_in_user_viewing_login">
+            <h1>You are Already Logged In</h1>
+            <p>
+              You cannot login, because you are already logged in!
+              Go to 
+              <a href="/">the homepage for
+                <span class="site" 
+                  tal:content="view/siteInfo/get_name">this site</span></a>
+              to view the messages in your groups.</p>
+          </tal:block><!--logged_in_user_viewing_login-->
+          <tal:block condition="not:view/logged_in_user_viewing_login">
+            <h1>Permission Denied</h1>
+            <p tal:define="url python:request.form.get('came_from', '')">
+              You do not have permission to see the page you tried to view:
+              <a tal:attributes="href url"
+                href="#"><code class="url" tal:content="url">#</code>.</a>
+              If you think you should have permission to view this page,
+              <a tal:attributes="href python:'mailto:%s?Subject=Permission Denied: %s' %(view.siteInfo.get_support_email(), url)" 
+                href="#">contact support.</a>
+            </p>
+          </tal:block><!--not:logged_in_user_viewing_login-->
+        </tal:block><!--not:view/anonomous_viewing_page-->
       </tal:block><!--body-->
     </body>
   </tal:block>

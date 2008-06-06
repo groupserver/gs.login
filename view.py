@@ -21,6 +21,8 @@ class GSLoginView( Products.Five.BrowserView ):
 
     '''
     def __init__(self, context, request):
+        assert request
+        assert context
         self.context = context
         self.request = request
         self.siteInfo = Products.GSContent.interfaces.IGSSiteInfo( context )
@@ -34,12 +36,18 @@ class GSLoginView( Products.Five.BrowserView ):
 
     @property
     def anonomous_viewing_page( self ):
-        assert self.request
-        assert self.context
-
         roles = self.request.AUTHENTICATED_USER.getRolesInContext(self.context)
         retval = 'Authenticated' not in roles
         
+        assert type(retval) == bool
+        return retval
+
+    @property
+    def logged_in_user_viewing_login( self ):
+        url = self.request.URL0
+        baseLoginURL = '%s/login.html' % self.siteInfo.url
+        
+        retval = (url == baseLoginURL)
         assert type(retval) == bool
         return retval
 
