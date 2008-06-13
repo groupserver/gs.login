@@ -3,8 +3,12 @@
 
 '''
 import Products.Five, Globals
-import sha, hmac
+import sha
+import md5
+import hmac
 import time
+import urllib2
+import random
 
 from Products.XWFCore.XWFUtils import getOption
 from Products.CustomUserFolder.interfaces import IGSUserInfo
@@ -14,7 +18,7 @@ import logging
 log = logging.getLogger('GSLogin')
 
 def seedGenerator( ):
-    return sha.new(str(time.time())).hexdigest()
+    return sha.new(str(time.time())+str(random.random())).hexdigest()
 
 class GSLoginView( Products.Five.BrowserView ):
     ''' View object for logging into a groupserver site.
@@ -52,6 +56,8 @@ class GSLoginView( Products.Five.BrowserView ):
         return retval
 
     def processCredentials( self ):
+        cache_buster = seedGenerator()
+
         login = self.request.get('login', '')
         
         if not login:
@@ -105,7 +111,12 @@ class GSLoginView( Products.Five.BrowserView ):
             came_from = self.request.get('came_from', '')
             redirect_to = ''
             if came_from:
-                redirect_to = came_from
+                url, query = urllib2.splitquery(came_from)
+                if query:
+                    query = query+'&nc=%s' % cache_buster
+                else:
+                    query = 'nc=%s' % cache_buster
+                redirect_to = '?'.join((url, query))
             else:
                 persist = self.request.get('__ac_persistent', '')
                 redirect_to = '/login_redirect?__ac_persistent=%s' % persist
@@ -136,11 +147,12 @@ class GSLoginRedirect( Products.Five.BrowserView ):
 
     def loginRedirect( self ):
         user = self.request.AUTHENTICATED_USER
+        cache_buster = seedGenerator()
         if user:
             password = user.get_password()
             login = user.getId()
         else:
-            return self.request.response.redirect('login.html')
+            return self.request.response.redirect('login.html?nc=%s' % cache_buster)
 
         # if we are logging into the public site, figure out where to go
         canonicalHost = ''
@@ -169,9 +181,9 @@ class GSLoginRedirect( Products.Five.BrowserView ):
                             (redirect_uri, login, passhash, seed, persist))
         elif not password:
             # PPP: Need to be updated to pragmatic template
-            redirect_to = '%s/set_password.xml' % redirect_uri
+            redirect_to = '%s/set_password.xml?nc=%s' % (redirect_uri, cache_buster)
         else:
-            redirect_to = '%s/' % redirect_uri
+            redirect_to = '%s?nc=%s' % (redirect_uri, cache_buster)
 
         userInfo = IGSUserInfo(user)
         m = 'loginRedirect: Redirecting %s (%s) to <%s> on %s (%s)'%\
