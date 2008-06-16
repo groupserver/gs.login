@@ -129,6 +129,11 @@
               <a href="/reset_password.html">Reset your password</a> if you
               cannot remember it.
             </dd>
+            <dt>Register</dt>
+            <dd><a href="/request_registration.html">Regsister,</a> and 
+              join the groups on
+              <span class="site" 
+                tal:content="view/siteInfo/get_name">this site</span></dd>
             <dt>Unable to login</dt>
             <dd tal:define="get_support_email python:modules['Products.XWFCore.XWFUtils'].get_support_email">
               If you are unable to log in, please 
