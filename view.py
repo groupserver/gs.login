@@ -151,6 +151,7 @@ class GSLoginRedirect( Products.Five.BrowserView ):
         if user:
             password = user.get_password()
             login = user.getId()
+            userInfo = IGSUserInfo(user)
         else:
             return self.request.response.redirect('login.html?nc=%s' % cache_buster)
 
@@ -180,12 +181,10 @@ class GSLoginRedirect( Products.Five.BrowserView ):
             redirect_to = ('%s/login.html?login=%s&ph=%s&seed=%s&__ac_persistent=%s' %
                             (redirect_uri, login, passhash, seed, persist))
         elif not password:
-            # PPP: Need to be updated to pragmatic template
-            redirect_to = '%s/set_password.xml?nc=%s' % (redirect_uri, cache_buster)
+            redirect_to = '%s/password.html' % userInfo.url
         else:
             redirect_to = '%s?nc=%s' % (redirect_uri, cache_buster)
 
-        userInfo = IGSUserInfo(user)
         m = 'loginRedirect: Redirecting %s (%s) to <%s> on %s (%s)'%\
           (userInfo.name, userInfo.id, redirect_to, 
            self.siteInfo.name, self.siteInfo.id)
