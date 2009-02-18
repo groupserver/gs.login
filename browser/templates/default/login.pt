@@ -6,12 +6,9 @@
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   metal:use-macro="context/@@groupserver_site_home_layout/page"
   tal:define="state view/processCredentials;
-  site context/Scripts/get/division_object;
-  siteName python:view.siteInfo.get_name();
-  siteId python:view.siteInfo.get_id()">
+  site context/Scripts/get/division_object">
   <head>
-    <title metal:fill-slot="title">
-      <span tal:replace="siteName"/>: Login
+    <title metal:fill-slot="title">Login
     </title>
     
     <tal:block metal:fill-slot="metadata">
@@ -124,24 +121,20 @@
           </div>
         </form>
         <dl>
-          <dt>Forgotten password</dt>
+          <dt>Can't Login?</dt>
           <dd>
-            <a href="/reset_password.html">Reset your password</a> if you
-            cannot remember it.
+            <a href="/reset_password.html">Reset your 
+              <strong>password</strong></a>
           </dd>
           <dt>Sign up</dt>
           <dd><a href="/request_registration.html">Sign up,</a> and 
             join the groups on
             <span class="site" 
               tal:content="view/siteInfo/get_name">this site</span></dd>
-          <dt>Unable to login</dt>
-          <dd tal:define="get_support_email python:modules['Products.XWFCore.XWFUtils'].get_support_email">
-            If you are unable to log in, please 
-            <a tal:attributes="href python:'mailto:%s' % get_support_email(context, siteId)">email
-            <span tal:content="siteName"/> support</a>,
-            specifying your login email address, the steps
-            you have taken to log in, and the response that
-            you received from the site.
+          <dt>Help</dt>
+          <dd>
+            <a href="/help/faqs">Check the  <strong>frequently asked
+              questions</strong></a>
           </dd>
         </dl>
       </tal:block><!--AnonView-->
@@ -170,5 +163,5 @@
       </tal:block><!--not:view/anonomous_viewing_page-->
     </tal:block><!--body-->
   </body>
-</html>
+</tal:block>
 
