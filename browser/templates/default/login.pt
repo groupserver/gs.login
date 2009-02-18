@@ -121,19 +121,22 @@
           </div>
         </form>
         <dl>
-          <dt>Can't Login?</dt>
+          <dt>Can't Log in?</dt>
           <dd>
             <a href="/reset_password.html">Reset your 
               <strong>password</strong></a>
           </dd>
           <dt>Sign up</dt>
-          <dd><a href="/request_registration.html">Sign up,</a> and 
-            join the groups on
+          <dd>
+            <a href="/request_registration.html"><strong>Sign 
+                up</strong></a> 
+            and join the groups on
             <span class="site" 
               tal:content="view/siteInfo/get_name">this site</span></dd>
           <dt>Help</dt>
           <dd>
-            <a href="/help/faqs">Check the  <strong>frequently asked
+            Check the
+            <a href="/help/faqs"><strong>frequently asked
               questions</strong></a>
           </dd>
         </dl>
