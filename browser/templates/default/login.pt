@@ -121,7 +121,7 @@
           </div>
         </form>
         <dl>
-          <dt>Can't Log in?</dt>
+          <dt>Can't log in?</dt>
           <dd>
             <a href="/reset_password.html">Reset your 
               <strong>password</strong></a>
