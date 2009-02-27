@@ -13,9 +13,7 @@ import random
 from Products.XWFCore.XWFUtils import getOption
 from Products.CustomUserFolder.interfaces import IGSUserInfo
 from util import getDivisionObjects, isGSUser, getCurrentUserDivision
-
-import logging
-log = logging.getLogger('GSLogin')
+from loginaudit import *
 
 def seedGenerator( ):
     return sha.new(str(time.time())+str(random.random())).hexdigest()
@@ -92,8 +90,9 @@ class GSLoginView( Products.Five.BrowserView ):
             myhmac = hmac.new(password, login+password+seed, sha).hexdigest()
             
             state = passhmac == myhmac or False
-        
+
         if state:
+            # Password matches
             if self.passwordsEncrypted():
                 storepass = '{SHA}%s=' % password
             else:
@@ -102,13 +101,12 @@ class GSLoginView( Products.Five.BrowserView ):
             self.context.cookie_authentication.credentialsChanged(user, 
               str(user.getId()), storepass)
             
-            userInfo = IGSUserInfo(user)
-            m = 'Logging in %s (%s) to %s (%s)' %\
-              (userInfo.name, userInfo.id, 
-               self.siteInfo.name, self.siteInfo.id)
-            log.info(m)
-
             came_from = self.request.get('came_from', '')
+            persist = self.request.get('__ac_persistent', '')
+            auditor = LoginAuditor(self.siteInfo, user)
+            auditor.info(LOGIN, persist, 
+                came_from and urllib2.splitquery(came_from)[0] or self.siteInfo.url)
+
             redirect_to = ''
             if came_from:
                 url, query = urllib2.splitquery(came_from)
@@ -118,21 +116,18 @@ class GSLoginView( Products.Five.BrowserView ):
                     query = 'nc=%s' % cache_buster
                 redirect_to = '?'.join((url, query))
             else:
-                persist = self.request.get('__ac_persistent', '')
                 redirect_to = '/login_redirect?__ac_persistent=%s' % persist
                 
             self.request.response.redirect(redirect_to)
         else:
-            m = 'Not logging in user "%s" to %s (%s)' % (login, 
-              self.siteInfo.name, self.siteInfo.id)
-            log.info(m)
             if user and not state:
-                userInfo = IGSUserInfo(user)
-                m = 'User %s (%s) exists, so bad password' % \
-                  (userInfo.name, userInfo.id)
+                # Password does not match
+                auditor = LoginAuditor(self.siteInfo, user)
+                auditor.info(BADPASSWORD)
             else:
-                m = 'No such user "%s"' % login
-            log.info(m)
+                # There is no user
+                auditor = AnonLoginAuditor(self.context, self.siteInfo)
+                auditor.info(BADUSERID, login)
                 
         user = not not user
         password = not not password
@@ -184,14 +179,6 @@ class GSLoginRedirect( Products.Five.BrowserView ):
             redirect_to = '%s/password.html' % userInfo.url
         else:
             redirect_to = '%s?nc=%s' % (redirect_uri, cache_buster)
-
-        m = 'loginRedirect: Redirecting %s (%s) to <%s> on %s (%s)'%\
-          (userInfo.name, userInfo.id, redirect_to, 
-           self.siteInfo.name, self.siteInfo.id)
-        log.info(m)
-        m = 'loginRedirect: %s (%s) set Remember Me to "%s"'%\
-          (userInfo.name, userInfo.id, persist)
-        log.info(m)
         
         self.request.response.redirect(redirect_to)
 
