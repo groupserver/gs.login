@@ -56,6 +56,8 @@
 
       </head>
     <body>
+      <div metal:fill-slot="utilitylinks" 
+        id="utilitylinks">&#160;</div>
       <div metal:fill-slot="messages" tal:omit-tag="">
         <div class="message-error"
         tal:condition="python:view.state and not view.state[0]">
