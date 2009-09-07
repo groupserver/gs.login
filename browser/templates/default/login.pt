@@ -23,8 +23,6 @@
           src="/++resource++crypto/sha1.js">&#160;</script>
         <script type="text/javascript"
           src="/++resource++popup_help-20071218.js">&#160;</script>
-        <script type="text/javascript"
-          src="/++resource++check_required-20071214.js">&#160;</script>
         <script type="text/javascript">
           jQuery.noConflict();
           function loginSubmit(event) {
@@ -48,7 +46,6 @@
           jQuery.noConflict()
           jQuery(document).ready( function () {
               GSPopupFormHelp.init('#login-form');
-              GSCheckRequired.init(['#login', '#password'], '#loginButton');
           });
           jQuery('#login').focus();
         </script>
