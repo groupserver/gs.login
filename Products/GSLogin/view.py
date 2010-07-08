@@ -7,7 +7,7 @@ import sha
 import md5
 import hmac
 import time
-import urllib2
+import urllib
 import random
 
 from Products.XWFCore.XWFUtils import getOption
@@ -105,11 +105,11 @@ class GSLoginView( Products.Five.BrowserView ):
             persist = self.request.get('__ac_persistent', '')
             auditor = LoginAuditor(self.siteInfo, user)
             auditor.info(LOGIN, persist, 
-                came_from and urllib2.splitquery(came_from)[0] or self.siteInfo.url)
+                came_from and urllib.splitquery(came_from)[0] or self.siteInfo.url)
 
             redirect_to = ''
             if came_from:
-                url, query = urllib2.splitquery(came_from)
+                url, query = urllib.splitquery(came_from)
                 if query:
                     query = query+'&nc=%s' % cache_buster
                 else:
