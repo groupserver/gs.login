@@ -2,9 +2,15 @@
 '''GroupServer Login
 
 '''
-import Products.Five, Globals
-import sha
-import md5
+import Products.Five
+from AccessControl.class_init import InitializeClass
+try:
+    # python 2.6
+    from hashlib import md5
+    from hashlib import sha1 as sha
+except ImportError:
+    import sha
+    import md5
 import hmac
 import time
 import urllib
@@ -182,4 +188,4 @@ class GSLoginRedirect( Products.Five.BrowserView ):
         
         self.request.response.redirect(redirect_to)
 
-Globals.InitializeClass( GSLoginView )
+InitializeClass( GSLoginView )
