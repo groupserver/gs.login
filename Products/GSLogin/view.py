@@ -22,7 +22,7 @@ from util import getDivisionObjects, isGSUser, getCurrentUserDivision
 from loginaudit import *
 
 def seedGenerator( ):
-    return sha.new(str(time.time())+str(random.random())).hexdigest()
+    return sha(str(time.time())+str(random.random())).hexdigest()
 
 class GSLoginView( Products.Five.BrowserView ):
     ''' View object for logging into a groupserver site.
