@@ -3,7 +3,7 @@
 
 '''
 import Products.Five
-from AccessControl.class_init import InitializeClass
+from App.class_init import InitializeClass
 try:
     # python 2.6
     from hashlib import md5
