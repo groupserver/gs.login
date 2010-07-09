@@ -9,8 +9,8 @@ try:
     from hashlib import md5
     from hashlib import sha1 as sha
 except ImportError:
-    import sha
-    import md5
+    from sha import sha
+    from md5 import md5
 import hmac
 import time
 import urllib
