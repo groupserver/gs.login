@@ -2,27 +2,33 @@
 '''GroupServer Login
 
 '''
-import Products.Five
-from App.class_init import InitializeClass
+from types import BuiltinFunctionType
 try:
-    # python 2.6
+    # Python 2.6
     from hashlib import md5
     from hashlib import sha1 as sha
+    seed_generator = sha
 except ImportError:
-    from sha import sha
+    # Python 2.4
+    import sha
     from md5 import md5
+    seed_generator = sha.sha
+assert type(seed_generator) == BuiltinFunctionType,\
+    'Did not create the seed generator'
 import hmac
 import time
 import urllib
 import random
 
+import Products.Five
+from App.class_init import InitializeClass
 from Products.XWFCore.XWFUtils import getOption
 from Products.CustomUserFolder.interfaces import IGSUserInfo
 from util import getDivisionObjects, isGSUser, getCurrentUserDivision
 from loginaudit import *
 
 def seedGenerator( ):
-    return sha(str(time.time())+str(random.random())).hexdigest()
+    return seed_generator(str(time.time())+str(random.random())).hexdigest()
 
 class GSLoginView( Products.Five.BrowserView ):
     ''' View object for logging into a groupserver site.
