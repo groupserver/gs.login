@@ -149,10 +149,11 @@ class LoginEvent(BasicAuditEvent):
        
     def __str__(self):
         retval = u'%s (%s) logged in to %s (%s). Redirecting to '\
-          u'<%s> with remember me set to "%s"'%\
-          (self.userInfo.name, self.userInfo.id,
-           self.siteInfo.name, self.siteInfo.id,
-           self.supplementaryDatum, self.instanceDatum)
+                    u'<%s> with remember me set to "%s"'%\
+                    (self.userInfo.name, self.userInfo.id,
+                    self.siteInfo.name, self.siteInfo.id,
+                    self.supplementaryDatum, self.instanceDatum)
+        retval = retval.encode('ascii', 'ignore')
         return retval
     
     @property
@@ -176,9 +177,10 @@ class BadPasswordEvent(BasicAuditEvent):
        
     def __str__(self):
         retval = u'%s (%s) failed to log in to %s (%s) because '\
-          u'the password is incorrect'%\
-          (self.userInfo.name, self.userInfo.id,
-           self.siteInfo.name, self.siteInfo.id)
+                    u'the password is incorrect'%\
+                    (self.userInfo.name, self.userInfo.id,
+                    self.siteInfo.name, self.siteInfo.id)
+        retval = retval.encode('ascii', 'ignore')
         return retval
     
     @property
@@ -201,8 +203,10 @@ class BadUserIdEvent(BasicAuditEvent):
        
     def __str__(self):
         retval = u'Failed to log in (%s) to %s (%s) because no '\
-          'email or user ID matched.'%\
-          (self.instanceDatum, self.siteInfo.name, self.siteInfo.id)
+                    u'email or user ID matched.'%\
+                    (self.instanceDatum, 
+                    self.siteInfo.name, self.siteInfo.id)
+        retval = retval.encode('ascii', 'ignore')
         return retval
     
     @property
