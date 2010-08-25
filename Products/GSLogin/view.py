@@ -13,6 +13,7 @@ except ImportError:
     import sha
     from md5 import md5
     seed_generator = sha.sha
+    
 assert type(seed_generator) == BuiltinFunctionType,\
     'Did not create the seed generator'
 import hmac
@@ -74,7 +75,6 @@ class GSLoginView( Products.Five.BrowserView ):
             return
         
         user = None
-        userInfo = None
         password = None
         if login:
             if login.find('@') > 0:
@@ -85,10 +85,14 @@ class GSLoginView( Products.Five.BrowserView ):
                 password = user.get_password()
                 if self.passwordsEncrypted():
                     # strip off the encoding declaration and the trailing '='
-                    password = password.split('}')[-1][:-1]        
+                    password = password.split('}')[-1][:-1]
+        
+        if isinstance(password, unicode):
+            password = password.encode('utf-8')
+        
         state = False
         passhmac = ''
-         # We always want the password, for logging
+        # We always want the password, for logging
         if user:
             pw = self.request.get('password', '')
             seed = self.request.get('seed','')
