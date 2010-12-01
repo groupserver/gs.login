@@ -161,6 +161,9 @@ class GSLoginRedirect( Products.Five.BrowserView ):
         cache_buster = seedGenerator()
         if user:
             password = user.get_password()
+            if isinstance(password, unicode):
+                password = password.encode('utf-8')
+            
             login = user.getId()
             userInfo = IGSUserInfo(user)
         else:
