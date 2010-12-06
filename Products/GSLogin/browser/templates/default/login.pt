@@ -90,15 +90,15 @@
               <label class="text" 
                 title="Enter the email address, or login name, you use with your forums on this site"
                 for="login">Email Address</label>
-              <input id="login"  name="login" class="text" type="text" 
+              <input id="login"  name="login" class="textType" type="text" 
                 value="" title="Enter your email address here" />
             </div>
               
             <div class="form-widget required">
-              <label class="text" 
+              <label class="textType"
                 title="Enter the password that you use with this site (case-sensitive)"
                 for="password">Password</label>
-              <input id="password" class="text" 
+              <input id="password" class="textType"
                 type="password" name="password" 
                 value="" title="Enter your password"/>
             </div>
