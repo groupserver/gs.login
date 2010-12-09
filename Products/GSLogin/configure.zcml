@@ -8,10 +8,6 @@
     class="Products.GSContent.view.GSContentView"
     permission="zope2.Public">
 
-    <browser:page
-      name="register.html"
-      template="browser/templates/default/register.pt" />
-
   </browser:pages>
   
   <browser:page for="*" name="login.html"
@@ -21,14 +17,6 @@
   <browser:page for="*" name="logout.html"
     class=".view.GSLoginView"
     template="browser/templates/default/loggedout.pt" permission="zope2.Public" />
-
-  <browser:page for="*" name="forgottenpassword.html"
-    class=".view.GSLoginView"
-    template="browser/templates/default/forgottenpassword.pt" permission="zope2.Public" />
-
-  <browser:page for="*" name="sentpassword.html"
-    class=".view.GSLoginView"
-    template="browser/templates/default/sentpassword.pt" permission="zope2.Public" />
 
   <browser:page for="*" name="loggedin.html"
     template="browser/templates/default/loggedin.pt" permission="zope2.View" />
