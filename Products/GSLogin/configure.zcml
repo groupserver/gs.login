@@ -33,5 +33,12 @@
   <interface 
     interface=".interfaces.IGSLogin"
     type="zope.app.content.interfaces.IContentType" />
-  
+    
+  <utility
+    name="groupserver.Login" 
+    factory=".loginaudit.LoginAuditEventFactory"
+    provides="zope.component.interfaces.IFactory"
+    permission="zope.Public" 
+  />
+
 </configure>

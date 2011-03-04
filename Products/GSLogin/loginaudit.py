@@ -144,13 +144,13 @@ class LoginEvent(BasicAuditEvent):
     def __init__(self, context, id, d, userInfo, siteInfo, 
         instanceDatum, supplementaryDatum):
         BasicAuditEvent.__init__(self, context, id, 
-          LOGIN, d, userInfo, None, siteInfo, None,  
+          LOGIN, d, None, userInfo, siteInfo, None,  
           instanceDatum, supplementaryDatum, SUBSYSTEM)
        
     def __str__(self):
         retval = u'%s (%s) logged in to %s (%s). Redirecting to '\
                     u'<%s> with remember me set to "%s"'%\
-                    (self.userInfo.name, self.userInfo.id,
+                    (self.instanceUserInfo.name, self.instanceUserInfo.id,
                     self.siteInfo.name, self.siteInfo.id,
                     self.supplementaryDatum, self.instanceDatum)
         retval = retval.encode('ascii', 'ignore')
@@ -159,9 +159,9 @@ class LoginEvent(BasicAuditEvent):
     @property
     def xhtml(self):
         cssClass = u'audit-event groupserver-login-event-%s' % self.code
-        retval = u'<span class="%s">Logged in, and visited'\
-          u'<code><a href="%s">%s</a></code>'%\
-          (cssClass, self.supplementaryDatum)
+        retval = u'<span class="%s">Logged in, and visited '\
+          u'<a href="%s"><code class="url">%s</code></a>'%\
+          (cssClass, self.supplementaryDatum, self.supplementaryDatum)
         retval = u'%s (%s)' % \
           (retval, munge_date(self.context, self.date))
           
