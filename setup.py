@@ -5,7 +5,7 @@ from version import get_version
 
 version = get_version()
 
-setup(name='Products.GSLogin',
+setup(name='gs.login',
       version=version,
       description="",
       long_description=open("README.txt").read() + "\n" +
@@ -20,7 +20,7 @@ setup(name='Products.GSLogin',
       url='http://groupserver.org',
       license='ZPL',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['Products'],
+      namespace_packages=['gs'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

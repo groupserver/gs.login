@@ -129,6 +129,7 @@
             and join the groups on
             <span class="site" 
               tal:content="view/siteInfo/get_name">this site</span></dd>
+          <dd tal:content="structure provider:groupserver.SignupMethods"></dd>
           <dt>Help</dt>
           <dd>
             Check the
