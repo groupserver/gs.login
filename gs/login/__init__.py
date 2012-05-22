@@ -1,3 +1,4 @@
+# coding=utf-8
 import AccessControl.AuthEncoding
 from AccessControl.AuthEncoding import _schemes
 
@@ -18,3 +19,4 @@ def pw_validate(reference, attempt):
     return (reference == attempt)
 
 AccessControl.AuthEncoding.pw_validate = pw_validate
+
