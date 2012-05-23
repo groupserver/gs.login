@@ -1,4 +1,11 @@
 # coding=utf-8
+try:
+    # Python 2.6
+    from hashlib import sha1 as sha
+except ImportError:
+    # --=mpj17=-- Question: Do we need to support Python 2.4?
+    # Python 2.4
+    import sha
 import hmac
 from Products.XWFCore.XWFUtils import getOption
 from gs.content.base.page import SitePage
@@ -53,5 +60,5 @@ class GSLoginRedirect( SitePage ):
         else:
             uri = '%s?nc=%s' % (redirect_uri, cache_buster)
         
-        self.request.response.redirect(redirect_to)
+        self.request.response.redirect(uri)
 
