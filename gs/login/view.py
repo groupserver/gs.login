@@ -9,7 +9,6 @@ except ImportError:
     import sha
 from hmac import new as hmac_new
 from urllib import splitquery
-from App.class_init import InitializeClass
 from gs.content.base.page import SitePage
 from util import isGSUser, seedGenerator
 from loginaudit import *
@@ -131,6 +130,4 @@ class GSLoginView( SitePage ):
             auditor.info(BADUSERID, login)
             self.state = (False, False, False)
         assert(self.state)
-
-InitializeClass( GSLoginView )
 
