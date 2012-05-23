@@ -1,0 +1,47 @@
+<div id="gs-login-easy-login">
+  <h2>Login</h2>
+  <p>Login to see <strong>your groups.</strong></p>
+  <form id="gs-login-easy-login-form"
+    action="/login.html">
+    <input type="hidden" id="seed" name="seed" 
+      tal:attributes="value view/encryptionSeed"/>
+    <input type="hidden" id="ep" name="ep" 
+      tal:attributes="value view/passwordsEncrypted"/>
+    <input type="hidden" id="ph" name="ph" value=""/>
+    <input type="hidden" id="came_from" name="came_from" value="/" />
+    <input type="hidden" id="failed" name="failed" />
+    <div id="gs-login-email-address"
+      class="form-widget required">
+      <label class="text" 
+        title="Enter the email address, or login name, you use with your forums on this site"
+        for="login">Email Address</label>
+      <input id="login"  name="login" class="textType" type="text" 
+        value="" title="Enter your email address here" />
+    </div><!--gs-login-email-address-->
+    <div id="gs-login-password" 
+      class="form-widget required">
+      <label class="textType"
+        title="Enter the password that you use with this site (case-sensitive)"
+        for="password">Password</label>
+      <input id="password" class="textType"
+        type="password" name="password" 
+        value="" title="Enter your password"/>
+    </div><!--gs-login-password-->
+    <div id="gs-login-remember-me"
+      class="form-widget not-required">
+      <input type="checkbox" title="Remember me" 
+        class="checkboxType" value="1" 
+        name="__ac_persistent" id="__ac_persistent" />
+      <label for="__ac_persistent" class="checkboxLabel"
+        title="Check this if you want to automatically log in next time you visit this site from this computer. Do not check this if you are using a public terminal!">Remember me</label>
+    </div><!--gs-login-remember-me-->
+
+    <div id="gs-login-buttons" class="buttons">
+      <div class="formelementbutton">
+        <input class="button" type="submit" name="submit" 
+          id="loginButton" value="Login" />
+      </div>
+    </div>
+  </form>
+</div><!--gs-login-easy-login-->
+

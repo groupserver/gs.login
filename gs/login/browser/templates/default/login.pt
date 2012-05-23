@@ -44,14 +44,14 @@
           <input type="hidden" id="failed" name="failed" 
             tal:define="v python:view.state and not view.state[0]"
             tal:attributes="value v"/>
-          <div id="gs-login-email-address"
+          <div id="login"
             class="form-widget required">
             <label class="text" 
               title="Enter the email address, or login name, you use with your forums on this site"
               for="login">Email Address</label>
             <input id="login"  name="login" class="textType" type="text" 
               value="" title="Enter your email address here" />
-          </div><!--gs-login-email-address-->
+          </div><!--login-->
           <div id="gs-login-password" 
             class="form-widget required">
             <label class="textType"

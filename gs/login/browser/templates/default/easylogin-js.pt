@@ -1,0 +1,24 @@
+<script type="text/javascript" 
+  src="/++resource++crypto/sha1.js">&#160;</script>
+<script type="text/javascript">
+  jQuery.noConflict();
+  function loginSubmit(event) {
+      var el = jQuery('#gs-login-easy-login-form');
+      var pw = jQuery('#password').val();
+      var encrypt = jQuery('#ep').val();
+      if (encrypt == 'True') {
+          pw = b64_sha1(pw);
+      }
+      var loginText = jQuery('#login').val();
+      var seed = jQuery('#seed').val();
+      var new_passvalue = hex_hmac_sha1(pw, (loginText+pw+seed));
+      jQuery('#ph').val(new_passvalue);
+      jQuery('#password').val('');
+      //Event.unloadCache();
+  };
+  jQuery(document).ready( function () {
+      jQuery('#gs-login-easy-login-form').submit(loginSubmit);
+      jQuery('#login').focus();
+  });
+</script>
+
