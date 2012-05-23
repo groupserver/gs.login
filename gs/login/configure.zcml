@@ -7,19 +7,24 @@
     for="*"
     class="Products.GSContent.view.GSContentView"
     permission="zope2.Public">
-
   </browser:pages>
   
-  <browser:page for="*" name="login.html"
+  <browser:page name="login.html"
+    for="*" 
     class=".view.GSLoginView"
-    template="browser/templates/default/login.pt" permission="zope2.Public" />
+    template="browser/templates/default/login.pt"
+    permission="zope2.Public" />
 
-  <browser:page for="*" name="logout.html"
+  <browser:page name="logout.html"
+    for="*" 
     class=".view.GSLoginView"
-    template="browser/templates/default/loggedout.pt" permission="zope2.Public" />
+    template="browser/templates/default/loggedout.pt" 
+    permission="zope2.Public" />
 
-  <browser:page for="*" name="loggedin.html"
-    template="browser/templates/default/loggedin.pt" permission="zope2.View" />
+  <browser:page name="loggedin.html"
+    for="*" 
+    template="browser/templates/default/loggedin.pt" 
+    permission="zope2.View" />
 
   <browser:pages
     for="*"
@@ -42,3 +47,4 @@
   />
 
 </configure>
+
