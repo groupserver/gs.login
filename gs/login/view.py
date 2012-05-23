@@ -1,5 +1,5 @@
 # coding=utf-8
-'''GroupServer Login'''
+'''The GroupServer Login page'''
 try:
     # Python 2.6
     from hashlib import sha1 as sha
@@ -7,7 +7,7 @@ except ImportError:
     # --=mpj17=-- Question: Do we need to support Python 2.4?
     # Python 2.4
     import sha
-import hmac
+from hmac import new as hmac_new
 from urllib import splitquery
 from App.class_init import InitializeClass
 from gs.content.base.page import SitePage
@@ -15,13 +15,12 @@ from util import isGSUser, seedGenerator
 from loginaudit import *
 
 class GSLoginView( SitePage ):
-    ''' View object for logging into a groupserver site. '''
     def __init__(self, context, request):
         SitePage.__init__(self, context, request)
         self.state = None
 
     def passwordsEncrypted( self ):
-        return not not self.context.acl_users.encrypt_passwords
+        return bool(self.context.acl_users.encrypt_passwords)
 
     @property
     def encryptionSeed(self):
@@ -89,7 +88,7 @@ class GSLoginView( SitePage ):
         assert retval
         return retval
     
-    def check_password(self, login, password):
+    def password_matches(self, login, password):
         pw = self.request.get('password', '')
         seed = self.request.get('seed','')
         ph = self.request.get('ph', '')
@@ -98,9 +97,9 @@ class GSLoginView( SitePage ):
         else:
             # blindly try the password, even if it's set to nothing
             msg = login+pw+seed
-            passhmac = hmac.new(pw, msg, sha).hexdigest()
+            passhmac = hmac_new(pw, msg, sha).hexdigest()
         msg = login+password+seed
-        myhmac = hmac.new(password, msg, sha).hexdigest()
+        myhmac = hmac_new(password, msg, sha).hexdigest()
 
         retval = passhmac == myhmac 
         assert type(retval) == bool
@@ -111,14 +110,10 @@ class GSLoginView( SitePage ):
         if not login:
             return
         user = self.get_user_from_login(login)
-        passwordMatches = False
-        password = None
-        # We always want the password, for logging
         if user:
             auditor = LoginAuditor(self.siteInfo, user)
             password = self.get_password_from_user(user)        
-            passwordMatches = self.check_password(login, password)
-            if passwordMatches:
+            if self.password_matches(login, password):
                 self.store_password_cookie_for_user(user, password)
                 uri = self.get_redirect()
 
@@ -126,14 +121,16 @@ class GSLoginView( SitePage ):
                 persist = self.request.get('__ac_persistent', '')
                 auditor.info(LOGIN, persist, u)
 
+                self.state = (True, True, True)
                 self.request.response.redirect(uri)
             else: # Password does not match
                 auditor.info(BADPASSWORD)
+                self.state = (False, True, True)
         else: # There is no user
             auditor = AnonLoginAuditor(self.context, self.siteInfo)
             auditor.info(BADUSERID, login)
-                
-        self.state = (passwordMatches, bool(user), bool(password))
+            self.state = (False, False, False)
+        assert(self.state)
 
 InitializeClass( GSLoginView )
 
