@@ -106,11 +106,12 @@
         <div id="gs-login-permission-denied"
           tal:condition="not:view/logged_in_user_viewing_login">
           <h1>Permission Denied</h1>
-          <p tal:define="url python:request.form.get('came_from', '')">
+          <p>
             You do not have permission to see the page
-            <code class="url" tal:content="url">#</code>.
+            <code tal:content="python:request.form.get('came_from', '')"
+              class="url">#</code>.
             If you think you should have permission to view this page,
-            <a tal:attributes="href python:'mailto:%s?Subject=Permission Denied: %s' %(view.siteInfo.get_support_email(), url)" 
+            <a tal:attributes="href view/supportMessage" 
               href="#">contact support.</a>
           </p>
         </div><!--gs-login-permission-denied-->

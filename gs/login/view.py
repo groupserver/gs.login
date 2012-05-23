@@ -2,7 +2,7 @@
 '''The GroupServer Login page'''
 from hashlib import sha1 as sha
 from hmac import new as hmac_new
-from urllib import splitquery
+from urllib import splitquery, quote
 from gs.content.base.page import SitePage
 from util import isGSUser, seedGenerator
 from loginaudit import *
@@ -123,4 +123,14 @@ class GSLoginView( SitePage ):
             auditor.info(BADUSERID, login)
             self.state = (False, False, False)
         assert(self.state)
+
+    @property
+    def supportMessage(self):
+        msg = u'Hello,\n\nI saw a Permission Denied error when I '\
+            u'visited\n    %s\n\nI think I should be able to see this '\
+            u'page because...' % self.request.get('came_from','')
+        retval = 'mailto:%s?Subject=%s&body=%s'%\
+            (self.siteInfo.get_support_email(), 
+            quote('Permission Denied'), quote(msg.encode('utf-8')))
+        return retval
 
