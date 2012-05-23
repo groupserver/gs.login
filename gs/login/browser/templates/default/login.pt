@@ -110,9 +110,10 @@
             You do not have permission to see the page
             <code tal:content="python:request.form.get('came_from', '')"
               class="url">#</code>.
-            If you think you should have permission to view this page,
             <a tal:attributes="href view/supportMessage" 
-              href="#">contact support.</a>
+              class="email" href="#">Email support</a>
+            if you think you should have permission to view this page,
+            and we will try and help you.
           </p>
         </div><!--gs-login-permission-denied-->
       </tal:block><!--not:view/loggedInUserInfo/anonymous-->

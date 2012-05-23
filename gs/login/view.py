@@ -124,9 +124,16 @@ class GSLoginView( SitePage ):
 
     @property
     def supportMessage(self):
-        msg = u'Hello,\n\nI saw a Permission Denied error when I '\
-            u'visited\n    %s\n\nI think I should be able to see this '\
-            u'page because...' % self.request.get('came_from','')
+        msg = u'''Hello,
+        
+I saw a Permission Denied error when I visited\n    %s
+
+I think I should be able to see this page because...
+
+Thanks,
+  %s\n  <%s%s>\n''' % \
+        (self.request.get('came_from',''), self.loggedInUserInfo.name,
+        self.siteInfo.url, self.loggedInUserInfo.url )
         retval = 'mailto:%s?Subject=%s&body=%s'%\
             (self.siteInfo.get_support_email(), 
             quote('Permission Denied'), quote(msg.encode('utf-8')))
