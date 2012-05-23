@@ -1,12 +1,6 @@
 # coding=utf-8
-try:
-    # Python 2.6
-    from hashlib import sha1 as sha
-except ImportError:
-    # --=mpj17=-- Question: Do we need to support Python 2.4?
-    # Python 2.4
-    import sha
-import hmac
+from hashlib import sha1 as sha
+from hmac import new as hmac_new
 from Products.XWFCore.XWFUtils import getOption
 from gs.content.base.page import SitePage
 from util import seedGenerator, getCurrentUserDivision
@@ -36,7 +30,7 @@ class GSLoginRedirect( SitePage ):
                 canonicalHost = getOption(current_division, 'canonicalHost')
 
         seed = seedGenerator()
-        passhash = hmac.new(password, login+password+seed, sha).hexdigest()
+        passhash = hmac_new(password, login+password+seed, sha).hexdigest()
         
         base_uri = self.request.BASE0
         if canonicalHost:
