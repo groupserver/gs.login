@@ -36,32 +36,38 @@ class GSLoginView( SitePage ):
         assert type(retval) == bool
         return retval
 
-    def processCredentials( self ):
-        cache_buster = seedGenerator()
+    def get_user_from_login(self, login):
+        retval = None
+        if login:
+            aclUsers = self.context.acl_users
+            if login.find('@') > 0:
+                retval = aclUsers.get_userByEmail(login)
+            if not retval:
+                retval = aclUsers.getUser(login)
+            # TODO: Nickname
+        return retval
 
-        login = self.request.get('login', '')
+    def get_password_from_user(self, user):
+        retval = None
+        # Check that we are actually a GSUser too
+        if user and isGSUser( user ): 
+            retval = user.get_password()
+            if self.passwordsEncrypted():
+                # Strip off the encoding declaration and the 
+                #   trailing '='
+                retval = retval.split('}')[-1][:-1]
+        if isinstance(retval, unicode):
+            retval = retval.encode('utf-8')
+        return retval
         
+    def processCredentials( self ):
+        login = self.request.get('login', '')
         if not login:
             return
         
-        user = None
-        password = None
-        if login:
-            if login.find('@') > 0:
-                user = self.context.acl_users.get_userByEmail(login)
-            if not user:
-                user = self.context.acl_users.getUser(login)
-            # Check that we are actually a GSUser too
-            if user and isGSUser( user ): 
-                password = user.get_password()
-                if self.passwordsEncrypted():
-                    # Strip off the encoding declaration and the 
-                    #   trailing '='
-                    password = password.split('}')[-1][:-1]
-        
-        if isinstance(password, unicode):
-            password = password.encode('utf-8')
-        
+        cache_buster = seedGenerator()
+        user = self.get_user_from_login(login)
+        password = self.get_password_from_user(user)        
         state = False
         passhmac = ''
         # We always want the password, for logging
@@ -73,49 +79,49 @@ class GSLoginView( SitePage ):
                 passhmac = ph
             else:
                 # blindly try the password, even if it's set to nothing
-                passhmac = hmac.new(pw, login+pw+seed, sha).hexdigest()            
+                msg = login+pw+seed
+                passhmac = hmac.new(pw, msg, sha).hexdigest()
+            msg = login+password+seed
+            myhmac = hmac.new(password, msg, sha).hexdigest()
+            state = passhmac == myhmac
             
-            myhmac = hmac.new(password, login+password+seed, sha).hexdigest()
-            
-            state = passhmac == myhmac or False
-
-        if state:
-            # Password matches
-            if self.passwordsEncrypted():
-                storepass = '{SHA}%s=' % password
-            else:
-                storepass = password
-
-            self.context.cookie_authentication.credentialsChanged(user, 
-              str(user.getId()), storepass)
-            
-            came_from = self.request.get('came_from', '')
-            persist = self.request.get('__ac_persistent', '')
-            auditor = LoginAuditor(self.siteInfo, user)
-            auditor.info(LOGIN, persist, 
-                came_from and urllib.splitquery(came_from)[0] or self.siteInfo.url)
-
-            redirect_to = ''
-            if came_from:
-                url, query = urllib.splitquery(came_from)
-                if query:
-                    query = query+'&nc=%s' % cache_buster
+            if state:
+                # Password matches
+                if self.passwordsEncrypted():
+                    storepass = '{SHA}%s=' % password
                 else:
-                    query = 'nc=%s' % cache_buster
-                redirect_to = '?'.join((url, query))
-            else:
-                redirect_to = '/login_redirect?__ac_persistent=%s' % persist
+                    storepass = password
+                cookieAuth = self.context.cookie_authentication
+                cookieAuth.credentialsChanged(user, str(user.getId()),
+                                                storepass)
                 
-            self.request.response.redirect(redirect_to)
-        else:
-            if user and not state:
+                came_from = self.request.get('came_from', '')
+                persist = self.request.get('__ac_persistent', '')
+                auditor = LoginAuditor(self.siteInfo, user)
+                u = ((came_from and urllib.splitquery(came_from)[0]) 
+                        or self.siteInfo.url)
+                auditor.info(LOGIN, persist, u)
+
+                redirect_to = ''
+                if came_from:
+                    url, query = urllib.splitquery(came_from)
+                    if query:
+                        query = query+'&nc=%s' % cache_buster
+                    else:
+                        query = 'nc=%s' % cache_buster
+                    redirect_to = '?'.join((url, query))
+                else:
+                    redirect_to = '/login_redirect?__ac_persistent=%s' % persist
+                    
+                self.request.response.redirect(redirect_to)
+            else: # not state
                 # Password does not match
                 auditor = LoginAuditor(self.siteInfo, user)
                 auditor.info(BADPASSWORD)
-            else:
-                # There is no user
-                auditor = AnonLoginAuditor(self.context, self.siteInfo)
-                auditor.info(BADUSERID, login)
+        else:
+            # There is no user
+            auditor = AnonLoginAuditor(self.context, self.siteInfo)
+            auditor.info(BADUSERID, login)
                 
         user = not not user
         password = not not password
