@@ -1,6 +1,5 @@
 <div id="gs-login-easy-login">
   <h2>Login</h2>
-  <p>Login to see <strong>your groups.</strong></p>
   <form id="gs-login-easy-login-form"
     action="/login.html">
     <input type="hidden" id="seed" name="seed" 
