@@ -31,11 +31,11 @@
     </div><!--form-message-->
     <tal:block metal:fill-slot="body">
       <div id="gs-login-anon" 
-        tal:condition="view/anonomous_viewing_page">
+        tal:condition="view/loggedInUserInfo/anonymous">
         <h1>Login</h1>
         <form id="login-form" tal:attributes="action request/URL">
           <input type="hidden" id="seed" name="seed" 
-            tal:attributes="value view/generateSeed"/>
+            tal:attributes="value view/encryptionSeed"/>
           <input type="hidden" id="ep" name="ep" 
             tal:attributes="value view/passwordsEncrypted"/>
           <input type="hidden" id="ph" name="ph" value=""/>
@@ -91,7 +91,7 @@
           </dd>
         </dl>
       </div><!--gs-login-anon-->
-      <tal:block condition="not:view/anonomous_viewing_page">
+      <tal:block condition="not:view/loggedInUserInfo/anonymous">
         <div id="gs-login-done"
           tal:condition="view/logged_in_user_viewing_login">
           <h1>You are Already Logged In</h1>
@@ -114,14 +114,15 @@
               href="#">contact support.</a>
           </p>
         </div><!--gs-login-permission-denied-->
-      </tal:block><!--not:view/anonomous_viewing_page-->
+      </tal:block><!--not:view/loggedInUserInfo/anonymous-->
     </tal:block><!--body-->
     <tal:block metal:fill-slot="javascript">
       <script type="text/javascript" 
         src="/++resource++crypto/sha1.js">&#160;</script>
       <script type="text/javascript"
         src="/++resource++popup_help-20071218.js">&#160;</script>
-      <script type="text/javascript">
+      <script type="text/javascript"
+        tal:condition="view/loggedInUserInfo/anonymous">
         jQuery.noConflict();
         function loginSubmit(event) {
             var el = jQuery('#login-form');

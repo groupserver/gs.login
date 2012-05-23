@@ -3,11 +3,12 @@
   xmlns:browser="http://namespaces.zope.org/browser"
   xmlns:five="http://namespaces.zope.org/five">
 
-  <browser:pages
+  <!--Necessary?
+  browser:pages
     for="*"
     class="Products.GSContent.view.GSContentView"
     permission="zope2.Public">
-  </browser:pages>
+  </browser:pages-->
   
   <browser:page name="login.html"
     for="*" 
@@ -28,7 +29,7 @@
 
   <browser:pages
     for="*"
-    class=".view.GSLoginRedirect"
+    class=".redirect.GSLoginRedirect"
     permission="zope2.View">
     <browser:page
       name="login_redirect"

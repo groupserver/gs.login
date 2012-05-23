@@ -1,36 +1,20 @@
 # coding=utf-8
 '''GroupServer Login'''
-from types import BuiltinFunctionType
 try:
     # Python 2.6
-    from hashlib import md5
     from hashlib import sha1 as sha
-    seed_generator = sha
 except ImportError:
     # --=mpj17=-- Question: Do we need to support Python 2.4?
     # Python 2.4
     import sha
-    from md5 import md5
-    seed_generator = sha.sha
-assert type(seed_generator) == BuiltinFunctionType,\
-    'Did not create the seed generator'
-import hmac, time, urllib, random
+import hmac, urllib
 from App.class_init import InitializeClass
-from Products.XWFCore.XWFUtils import getOption
 from gs.content.base.page import SitePage
-from util import isGSUser, getCurrentUserDivision
+from util import isGSUser, seedGenerator
 from loginaudit import *
 
-def seedGenerator( ):
-    s = seed_generator(str(time.time())+str(random.random()))
-    retval = s.hexdigest()
-    assert retval
-    return retval
-
 class GSLoginView( SitePage ):
-    ''' View object for logging into a groupserver site.
-
-    '''
+    ''' View object for logging into a groupserver site. '''
     def __init__(self, context, request):
         SitePage.__init__(self, context, request)
         self.state = None
@@ -38,13 +22,9 @@ class GSLoginView( SitePage ):
     def passwordsEncrypted( self ):
         return not not self.context.acl_users.encrypt_passwords
 
-    def generateSeed( self ):
-        return seedGenerator()
-
     @property
-    def anonomous_viewing_page( self ):
-        retval = self.loggedInUserInfo.anonymous
-        return retval
+    def encryptionSeed(self):
+        return seedGenerator()
 
     @property
     def logged_in_user_viewing_login( self ):
@@ -141,55 +121,6 @@ class GSLoginView( SitePage ):
         password = not not password
         
         self.state = (state, user, password)
-
-class GSLoginRedirect( SitePage ):
-    def __init__(self, context, request):
-        SitePage.__init__(self, context, request)
-
-    def loginRedirect( self ):
-        userInfo = self.loggedInUserInfo
-        cache_buster = seedGenerator()
-        if userInfo.anonymous:
-            retval = self.request.response.redirect('login.html?nc=%s' %
-                        cache_buster)
-            return retval
-        else:
-            password = userInfo.user.get_password()
-            if isinstance(password, unicode):
-                password = password.encode('utf-8')
-            login = userInfo.id
-
-        # if we are logging into the public site, figure out where to go
-        canonicalHost = ''
-        if self.siteInfo.siteObj.getProperty('is_public', False):        
-            current_division = getCurrentUserDivision(self.context, user)
-            if current_division:
-                canonicalHost = getOption(current_division, 'canonicalHost')
-
-        seed = seedGenerator()
-        passhash = hmac.new(password, login+password+seed, sha).hexdigest()
-        
-        base_uri = self.request.BASE0
-        if canonicalHost:
-            redirect_uri = 'http://%s' % canonicalHost
-        else:
-            redirect_uri = base_uri
-
-        persist = self.request.get('__ac_persistent', '')
-
-        if base_uri != redirect_uri:
-            # NEVER set cookie credentials for the public site or we 
-            # will be trapped in redirect hell
-            if self.siteInfo.siteObj.getProperty('is_public', False):            
-                self.request.response.expireCookie( self.context.cookie_authentication.auth_cookie )
-            redirect_to = ('%s/login.html?login=%s&ph=%s&seed=%s&__ac_persistent=%s' %
-                            (redirect_uri, login, passhash, seed, persist))
-        elif not password:
-            redirect_to = '%s/password.html' % userInfo.url
-        else:
-            redirect_to = '%s?nc=%s' % (redirect_uri, cache_buster)
-        
-        self.request.response.redirect(redirect_to)
 
 InitializeClass( GSLoginView )
 
