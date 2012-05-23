@@ -59,7 +59,16 @@ class GSLoginView( SitePage ):
         if isinstance(retval, unicode):
             retval = retval.encode('utf-8')
         return retval
-        
+    
+    def store_password_cookie_for_user(self, user, password):
+        if self.passwordsEncrypted():
+            storepass = '{SHA}%s=' % password
+        else:
+            storepass = password
+        cookieAuth = self.context.cookie_authentication
+        uid = str(user.getId())
+        cookieAuth.credentialsChanged(user, uid, storepass)
+    
     def processCredentials( self ):
         login = self.request.get('login', '')
         if not login:
@@ -87,14 +96,7 @@ class GSLoginView( SitePage ):
             
             if state:
                 # Password matches
-                if self.passwordsEncrypted():
-                    storepass = '{SHA}%s=' % password
-                else:
-                    storepass = password
-                cookieAuth = self.context.cookie_authentication
-                cookieAuth.credentialsChanged(user, str(user.getId()),
-                                                storepass)
-                
+                self.store_password_cookie_for_user(user, password)
                 came_from = self.request.get('came_from', '')
                 persist = self.request.get('__ac_persistent', '')
                 auditor = LoginAuditor(self.siteInfo, user)
