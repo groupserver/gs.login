@@ -7,7 +7,8 @@ except ImportError:
     # --=mpj17=-- Question: Do we need to support Python 2.4?
     # Python 2.4
     import sha
-import hmac, urllib
+import hmac
+from urllib import splitquery
 from App.class_init import InitializeClass
 from gs.content.base.page import SitePage
 from util import isGSUser, seedGenerator
@@ -69,12 +70,30 @@ class GSLoginView( SitePage ):
         uid = str(user.getId())
         cookieAuth.credentialsChanged(user, uid, storepass)
     
+    def get_redirect(self):
+        retval = ''
+        cameFrom = self.request.get('came_from', '')
+        if cameFrom:
+            cacheBuster = seedGenerator()
+            url, query = splitquery(cameFrom)
+            if query:
+                # Put a cache-buster at the end of the query
+                query = query+'&nc=%s' % cacheBuster
+            else:
+                # Add a cache-buster
+                query = 'nc=%s' % cacheBuster
+            retval = '?'.join((url, query))
+        else:
+            persist = self.request.get('__ac_persistent', '')
+            retval = '/login_redirect?__ac_persistent=%s' % persist
+        assert retval
+        return retval
+    
     def processCredentials( self ):
         login = self.request.get('login', '')
         if not login:
             return
         
-        cache_buster = seedGenerator()
         user = self.get_user_from_login(login)
         password = self.get_password_from_user(user)        
         state = False
@@ -97,25 +116,14 @@ class GSLoginView( SitePage ):
             if state:
                 # Password matches
                 self.store_password_cookie_for_user(user, password)
-                came_from = self.request.get('came_from', '')
-                persist = self.request.get('__ac_persistent', '')
+                uri = self.get_redirect()
+
                 auditor = LoginAuditor(self.siteInfo, user)
-                u = ((came_from and urllib.splitquery(came_from)[0]) 
-                        or self.siteInfo.url)
+                u = splitquery(uri)[0]
+                persist = self.request.get('__ac_persistent', '')
                 auditor.info(LOGIN, persist, u)
 
-                redirect_to = ''
-                if came_from:
-                    url, query = urllib.splitquery(came_from)
-                    if query:
-                        query = query+'&nc=%s' % cache_buster
-                    else:
-                        query = 'nc=%s' % cache_buster
-                    redirect_to = '?'.join((url, query))
-                else:
-                    redirect_to = '/login_redirect?__ac_persistent=%s' % persist
-                    
-                self.request.response.redirect(redirect_to)
+                self.request.response.redirect(uri)
             else: # not state
                 # Password does not match
                 auditor = LoginAuditor(self.siteInfo, user)
