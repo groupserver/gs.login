@@ -133,10 +133,7 @@ class GSLoginView( SitePage ):
             auditor = AnonLoginAuditor(self.context, self.siteInfo)
             auditor.info(BADUSERID, login)
                 
-        user = not not user
-        password = not not password
-        
-        self.state = (state, user, password)
+        self.state = (state, bool(user), bool(password))
 
 InitializeClass( GSLoginView )
 
