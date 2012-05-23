@@ -70,12 +70,3 @@ def getCurrentUserDivision( context, user ):
     # otherwise, well, not much we can do
     return division_object
 
-def isGSUser( user ):
-    try:
-        cd = user.getProperty('currentDivision', None)
-    except:
-        cd = None
-    
-    if cd != None:
-        return True
-    return False

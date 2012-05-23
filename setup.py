@@ -25,6 +25,8 @@ setup(name='gs.login',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'gs.content.base',
+          'Products.GSAuditTrail',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

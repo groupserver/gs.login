@@ -4,7 +4,7 @@ from hashlib import sha1 as sha
 from hmac import new as hmac_new
 from urllib import splitquery, quote
 from gs.content.base.page import SitePage
-from util import isGSUser, seedGenerator
+from util import seedGenerator
 from loginaudit import *
 
 class GSLoginView( SitePage ):
@@ -41,13 +41,11 @@ class GSLoginView( SitePage ):
         return retval
 
     def get_password_from_user(self, user):
-        retval = None
-        # Check that we are actually a GSUser too
-        if user and isGSUser( user ): 
-            retval = user.get_password()
-            if self.passwordsEncrypted():
-                # Strip off the encoding declaration and the trailing '='
-                retval = retval.split('}')[-1][:-1]
+        assert user, 'There is no user.'
+        retval = user.get_password()
+        if self.passwordsEncrypted():
+            # Strip off the encoding declaration and the trailing '='
+            retval = retval.split('}')[-1][:-1]
         if isinstance(retval, unicode):
             retval = retval.encode('utf-8')
         return retval
