@@ -1,12 +1,6 @@
 # coding=utf-8
 '''The GroupServer Login page'''
-try:
-    # Python 2.6
-    from hashlib import sha1 as sha
-except ImportError:
-    # --=mpj17=-- Question: Do we need to support Python 2.4?
-    # Python 2.4
-    import sha
+from hashlib import sha1 as sha
 from hmac import new as hmac_new
 from urllib import splitquery
 from gs.content.base.page import SitePage
@@ -52,8 +46,7 @@ class GSLoginView( SitePage ):
         if user and isGSUser( user ): 
             retval = user.get_password()
             if self.passwordsEncrypted():
-                # Strip off the encoding declaration and the 
-                #   trailing '='
+                # Strip off the encoding declaration and the trailing '='
                 retval = retval.split('}')[-1][:-1]
         if isinstance(retval, unicode):
             retval = retval.encode('utf-8')
