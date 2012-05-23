@@ -2,30 +2,12 @@
 <configure xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser"
   xmlns:five="http://namespaces.zope.org/five">
-
-  <!--Necessary?
-  browser:pages
-    for="*"
-    class="Products.GSContent.view.GSContentView"
-    permission="zope2.Public">
-  </browser:pages-->
   
   <browser:page name="login.html"
     for="*" 
     class=".view.GSLoginView"
     template="browser/templates/default/login.pt"
     permission="zope2.Public" />
-
-  <browser:page name="logout.html"
-    for="*" 
-    class=".view.GSLoginView"
-    template="browser/templates/default/loggedout.pt" 
-    permission="zope2.Public" />
-
-  <browser:page name="loggedin.html"
-    for="*" 
-    template="browser/templates/default/loggedin.pt" 
-    permission="zope2.View" />
 
   <browser:pages
     for="*"
@@ -36,16 +18,18 @@
       attribute="loginRedirect" />
   </browser:pages>
   
-  <interface 
-    interface=".interfaces.IGSLogin"
-    type="zope.app.content.interfaces.IContentType" />
-    
+
+  <browser:page name="logout.html"
+    for="*" 
+    class="gs.content.base.page.SitePage"
+    template="browser/templates/default/loggedout.pt" 
+    permission="zope2.Public" />
+
   <utility
     name="groupserver.Login" 
     factory=".loginaudit.LoginAuditEventFactory"
     provides="zope.component.interfaces.IFactory"
-    permission="zope.Public" 
-  />
+    permission="zope.Public" />
 
 </configure>
 

@@ -8,9 +8,7 @@
   </head>
   <body>
     <div metal:fill-slot="contextnavigation">&#160;</div>
-    <div metal:fill-slot="breadcrumb">&#160;</div>
-    <tal:block metal:fill-slot="body"
-      define="state view/processCredentials;">
+    <tal:block metal:fill-slot="body">
       <h1>Logged Out</h1>
       <p>Thank-you for participating. 
         You have been logged out of the system.</p>
