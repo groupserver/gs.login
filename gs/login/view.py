@@ -89,51 +89,51 @@ class GSLoginView( SitePage ):
         assert retval
         return retval
     
+    def check_password(self, login, password):
+        pw = self.request.get('password', '')
+        seed = self.request.get('seed','')
+        ph = self.request.get('ph', '')
+        if ph:
+            passhmac = ph
+        else:
+            # blindly try the password, even if it's set to nothing
+            msg = login+pw+seed
+            passhmac = hmac.new(pw, msg, sha).hexdigest()
+        msg = login+password+seed
+        myhmac = hmac.new(password, msg, sha).hexdigest()
+
+        retval = passhmac == myhmac 
+        assert type(retval) == bool
+        return retval
+        
     def processCredentials( self ):
         login = self.request.get('login', '')
         if not login:
             return
-        
         user = self.get_user_from_login(login)
-        password = self.get_password_from_user(user)        
-        state = False
-        passhmac = ''
+        passwordMatches = False
+        password = None
         # We always want the password, for logging
         if user:
-            pw = self.request.get('password', '')
-            seed = self.request.get('seed','')
-            ph = self.request.get('ph', '')
-            if ph:
-                passhmac = ph
-            else:
-                # blindly try the password, even if it's set to nothing
-                msg = login+pw+seed
-                passhmac = hmac.new(pw, msg, sha).hexdigest()
-            msg = login+password+seed
-            myhmac = hmac.new(password, msg, sha).hexdigest()
-            state = passhmac == myhmac
-            
-            if state:
-                # Password matches
+            auditor = LoginAuditor(self.siteInfo, user)
+            password = self.get_password_from_user(user)        
+            passwordMatches = self.check_password(login, password)
+            if passwordMatches:
                 self.store_password_cookie_for_user(user, password)
                 uri = self.get_redirect()
 
-                auditor = LoginAuditor(self.siteInfo, user)
-                u = splitquery(uri)[0]
+                u = splitquery(uri)[0].replace('login_redirect', '')
                 persist = self.request.get('__ac_persistent', '')
                 auditor.info(LOGIN, persist, u)
 
                 self.request.response.redirect(uri)
-            else: # not state
-                # Password does not match
-                auditor = LoginAuditor(self.siteInfo, user)
+            else: # Password does not match
                 auditor.info(BADPASSWORD)
-        else:
-            # There is no user
+        else: # There is no user
             auditor = AnonLoginAuditor(self.context, self.siteInfo)
             auditor.info(BADUSERID, login)
                 
-        self.state = (state, bool(user), bool(password))
+        self.state = (passwordMatches, bool(user), bool(password))
 
 InitializeClass( GSLoginView )
 
