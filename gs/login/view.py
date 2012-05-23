@@ -1,7 +1,5 @@
 # coding=utf-8
-'''GroupServer Login
-
-'''
+'''GroupServer Login'''
 from types import BuiltinFunctionType
 try:
     # Python 2.6
@@ -9,38 +7,32 @@ try:
     from hashlib import sha1 as sha
     seed_generator = sha
 except ImportError:
+    # --=mpj17=-- Question: Do we need to support Python 2.4?
     # Python 2.4
     import sha
     from md5 import md5
     seed_generator = sha.sha
-    
 assert type(seed_generator) == BuiltinFunctionType,\
     'Did not create the seed generator'
-import hmac
-import time
-import urllib
-import random
-
-import Products.Five
+import hmac, time, urllib, random
 from App.class_init import InitializeClass
 from Products.XWFCore.XWFUtils import getOption
-from Products.CustomUserFolder.interfaces import IGSUserInfo
-from util import getDivisionObjects, isGSUser, getCurrentUserDivision
+from gs.content.base.page import SitePage
+from util import isGSUser, getCurrentUserDivision
 from loginaudit import *
 
 def seedGenerator( ):
-    return seed_generator(str(time.time())+str(random.random())).hexdigest()
+    s = seed_generator(str(time.time())+str(random.random()))
+    retval = s.hexdigest()
+    assert retval
+    return retval
 
-class GSLoginView( Products.Five.BrowserView ):
+class GSLoginView( SitePage ):
     ''' View object for logging into a groupserver site.
 
     '''
     def __init__(self, context, request):
-        assert request
-        assert context
-        self.context = context
-        self.request = request
-        self.siteInfo = Products.GSContent.interfaces.IGSSiteInfo( context )
+        SitePage.__init__(self, context, request)
         self.state = None
 
     def passwordsEncrypted( self ):
@@ -51,10 +43,7 @@ class GSLoginView( Products.Five.BrowserView ):
 
     @property
     def anonomous_viewing_page( self ):
-        roles = self.request.AUTHENTICATED_USER.getRolesInContext(self.context)
-        retval = 'Authenticated' not in roles
-        
-        assert type(retval) == bool
+        retval = self.loggedInUserInfo.anonymous
         return retval
 
     @property
@@ -62,7 +51,8 @@ class GSLoginView( Products.Five.BrowserView ):
         url = self.request.URL0
         baseLoginURL = '%s/login.html' % self.siteInfo.url
         
-        retval = (url == baseLoginURL and not(self.request.get('came_from', '')))
+        retval = (url == baseLoginURL and 
+                    not(self.request.get('came_from', '')))
         assert type(retval) == bool
         return retval
 
@@ -81,10 +71,12 @@ class GSLoginView( Products.Five.BrowserView ):
                 user = self.context.acl_users.get_userByEmail(login)
             if not user:
                 user = self.context.acl_users.getUser(login)
-            if user and isGSUser( user ): # check that we are actually a GSUser too
+            # Check that we are actually a GSUser too
+            if user and isGSUser( user ): 
                 password = user.get_password()
                 if self.passwordsEncrypted():
-                    # strip off the encoding declaration and the trailing '='
+                    # Strip off the encoding declaration and the 
+                    #   trailing '='
                     password = password.split('}')[-1][:-1]
         
         if isinstance(password, unicode):
@@ -150,24 +142,22 @@ class GSLoginView( Products.Five.BrowserView ):
         
         self.state = (state, user, password)
 
-class GSLoginRedirect( Products.Five.BrowserView ):
+class GSLoginRedirect( SitePage ):
     def __init__(self, context, request):
-        self.context = context
-        self.request = request
-        self.siteInfo = Products.GSContent.interfaces.IGSSiteInfo( context )
+        SitePage.__init__(self, context, request)
 
     def loginRedirect( self ):
-        user = self.request.AUTHENTICATED_USER
+        userInfo = self.loggedInUserInfo
         cache_buster = seedGenerator()
-        if user:
-            password = user.get_password()
+        if userInfo.anonymous:
+            retval = self.request.response.redirect('login.html?nc=%s' %
+                        cache_buster)
+            return retval
+        else:
+            password = userInfo.user.get_password()
             if isinstance(password, unicode):
                 password = password.encode('utf-8')
-            
-            login = user.getId()
-            userInfo = IGSUserInfo(user)
-        else:
-            return self.request.response.redirect('login.html?nc=%s' % cache_buster)
+            login = userInfo.id
 
         # if we are logging into the public site, figure out where to go
         canonicalHost = ''
@@ -188,8 +178,8 @@ class GSLoginRedirect( Products.Five.BrowserView ):
         persist = self.request.get('__ac_persistent', '')
 
         if base_uri != redirect_uri:
-            # NEVER set cookie credentials for the public site or we will be
-            # trapped in redirect hell
+            # NEVER set cookie credentials for the public site or we 
+            # will be trapped in redirect hell
             if self.siteInfo.siteObj.getProperty('is_public', False):            
                 self.request.response.expireCookie( self.context.cookie_authentication.auth_cookie )
             redirect_to = ('%s/login.html?login=%s&ph=%s&seed=%s&__ac_persistent=%s' %
@@ -202,3 +192,4 @@ class GSLoginRedirect( Products.Five.BrowserView ):
         self.request.response.redirect(redirect_to)
 
 InitializeClass( GSLoginView )
+
