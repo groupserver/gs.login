@@ -79,6 +79,11 @@ class GSLoginView( SitePage ):
         return retval
     
     def password_matches(self, login, password):
+        # For security reasons the password is rarely passed in
+        #   en-clear. Instead the password is hashed with a seed (ph,
+        #   below). To compare the password with the one on file
+        #   (password, passed in) the system hashes the stored
+        #   version, and then does a comparison.
         pw = self.request.get('password', '')
         seed = self.request.get('seed','')
         ph = self.request.get('ph', '')
@@ -96,6 +101,7 @@ class GSLoginView( SitePage ):
         return retval
         
     def processCredentials( self ):
+        '''Entry point for processing the Login page.'''
         login = self.request.get('login', '')
         if not login:
             return
