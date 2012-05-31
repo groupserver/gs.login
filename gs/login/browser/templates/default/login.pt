@@ -44,7 +44,7 @@
           <input type="hidden" id="failed" name="failed" 
             tal:define="v python:view.state and not view.state[0]"
             tal:attributes="value v"/>
-          <div id="login"
+          <div id="login-id-widget"
             class="form-widget required">
             <label class="text" 
               title="Enter the email address, or login name, you use with your forums on this site"
@@ -140,15 +140,11 @@
             jQuery('#password').val('');
             //Event.unloadCache();
         };
-        function setupLogin(event) {
-            jQuery('#login-form').submit(loginSubmit);
-        }
-        jQuery(document).ready(setupLogin);
-        jQuery.noConflict()
         jQuery(document).ready( function () {
             GSPopupFormHelp.init('#login-form');
+            jQuery('#login-form').submit(loginSubmit);
+            jQuery('#login').focus();
         });
-        jQuery('#login').focus();
       </script>
     </tal:block>
   </body>
