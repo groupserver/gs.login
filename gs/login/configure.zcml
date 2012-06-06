@@ -8,7 +8,8 @@
     class=".view.GSLoginView"
     template="browser/templates/default/login.pt"
     permission="zope2.Public" />
-  <browser:viewlet name="gs-login-easy-login"
+  <!--see Feature 3445: Easy Login https://redmine.iopen.net/issues/3445
+      browser:viewlet name="gs-login-easy-login"
     for="Products.GSContent.interfaces.IGSSiteFolder"
     manager="gs.site.home.interfaces.ISiteHomeLeftColumn"
     template="browser/templates/default/easylogin.pt"
@@ -23,8 +24,7 @@
     class=".easylogin.EasyLogin"
     weight="5"
     title="Login" 
-    permission="zope2.Public"/>
-
+    permission="zope2.Public"/-->
 
   <browser:pages
     for="*"
@@ -35,7 +35,6 @@
       attribute="loginRedirect" />
   </browser:pages>
   
-
   <browser:page name="logout.html"
     for="*" 
     class="gs.content.base.page.SitePage"
