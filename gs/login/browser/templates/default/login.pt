@@ -1,11 +1,12 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   metal:use-macro="context/@@groupserver_site_home_layout/page">
   <head>
-    <title metal:fill-slot="title">
-      <span tal:replace="view/siteInfo/name"/>: Login
-    </title>
+    <title 
+      metal:fill-slot="title"
+      tal:content="string:Login:${view/siteInfo/name}">Login</title>
   </head>
   <body>
     <div metal:fill-slot="utilitylinks" 
@@ -18,14 +19,12 @@
         <p>Please enter your email address and password below.</p>
         <p>This is usually neccessary for one of these reasons:</p>
         <ul>
-          <li>you attempted to login, but either your email address or
-            your password was incorrect</li>
-          
-          <li>you tried to access a link inside the restricted area,
-            but you haven't yet logged in (this could have happened if
-            you clicked on a link in an email, for instance)</li>
-          
-          <li>your browser does not have cookies enabled</li>
+          <li>you attempted to login, but either your login name, or
+          your password were incorrect,</li>
+          <li>you have tried to access a link inside the restricted area,
+          but you haven't yet logged in (this could have happened if
+          you clicked on a link in an email for instance),</li>
+          <li>your browser does not have cookies enabled.</li>
         </ul>
       </div><!--message-error-->
     </div><!--form-message-->
@@ -69,7 +68,6 @@
             <label for="__ac_persistent" class="checkboxLabel"
               title="Check this if you want to automatically log in next time you visit this site from this computer. Do not check this if you are using a public terminal!">Remember me</label>
           </div><!--gs-login-remember-me-->
-
           <div id="gs-login-buttons" class="buttons">
             <div class="formelementbutton">
               <input class="button" type="submit" name="submit" 
@@ -101,7 +99,8 @@
             <a href="/">the homepage for
               <span class="site" 
                 tal:content="view/siteInfo/get_name">this site</span></a>
-            to view the messages in your groups.</p>
+            to view the messages in your groups.
+          </p>
         </div><!--gs-login-done-->
         <div id="gs-login-permission-denied"
           tal:condition="not:view/logged_in_user_viewing_login">
@@ -118,13 +117,14 @@
         </div><!--gs-login-permission-denied-->
       </tal:block><!--not:view/loggedInUserInfo/anonymous-->
     </tal:block><!--body-->
-    <tal:block metal:fill-slot="javascript">
+    <div id="gs-login-script"
+      metal:fill-slot="javascript"
+      tal:condition="view/loggedInUserInfo/anonymous">
       <script type="text/javascript" 
         src="/++resource++crypto/sha1.js">&#160;</script>
       <script type="text/javascript"
         src="/++resource++popup_help-20071218.js">&#160;</script>
-      <script type="text/javascript"
-        tal:condition="view/loggedInUserInfo/anonymous">
+      <script type="text/javascript">
         jQuery.noConflict();
         function loginSubmit(event) {
             var el = jQuery('#login-form');
@@ -146,7 +146,6 @@
             jQuery('#login').focus();
         });
       </script>
-    </tal:block>
+    </div><!--gs-login-script-->
   </body>
 </html>
-
