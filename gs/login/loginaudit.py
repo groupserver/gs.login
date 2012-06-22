@@ -226,8 +226,7 @@ class AnonLoginAuditor(object):
         self.siteInfo = siteInfo
         self.userInfo = createObject('groupserver.UserFromId', 
           context, '')
-        da = context.zsqlalchemy
-        self.queries = AuditQuery(da)
+        self.queries = AuditQuery()
       
         self.factory = LoginAuditEventFactory()
         
@@ -272,8 +271,7 @@ class LoginAuditor(object):
         self.userInfo = IGSUserInfo(user)
         self.siteInfo = siteInfo
         
-        da = user.zsqlalchemy
-        self.queries = AuditQuery(da)
+        self.queries = AuditQuery()
       
         self.factory = LoginAuditEventFactory()
         
