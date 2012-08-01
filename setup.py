@@ -25,8 +25,13 @@ setup(name='gs.login',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'zope.component',
+          'zope.interface',
           'gs.content.base',
           'gs.database',
+          'gs.viewlet',
+          'Products.CustomUserFolder',
+          'Products.XWFCore',
           'Products.GSAuditTrail',
           # -*- Extra requirements: -*-
       ],
