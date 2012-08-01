@@ -26,15 +26,6 @@
     title="Login" 
     permission="zope2.Public"/-->
 
-  <browser:pages
-    for="*"
-    class=".redirect.GSLoginRedirect"
-    permission="zope2.View">
-    <browser:page
-      name="login_redirect"
-      attribute="loginRedirect" />
-  </browser:pages>
-  
   <browser:page name="logout.html"
     for="*" 
     class="gs.content.base.page.SitePage"

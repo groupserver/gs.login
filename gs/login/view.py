@@ -62,19 +62,19 @@ class GSLoginView( SitePage ):
     def get_redirect(self):
         retval = ''
         cameFrom = self.request.get('came_from', '')
-        if cameFrom:
-            cacheBuster = seedGenerator()
-            url, query = splitquery(cameFrom)
-            if query:
-                # Put a cache-buster at the end of the query
-                query = query+'&nc=%s' % cacheBuster
-            else:
-                # Add a cache-buster
-                query = 'nc=%s' % cacheBuster
-            retval = '?'.join((url, query))
+        cacheBuster = seedGenerator()
+        url, query = splitquery(cameFrom)
+        if not url:
+            # Oddly, setting the default came_from to / does not work.
+            url = '/'
+        # Put a cache-buster at the end of the query
+        if query:
+            
+            query = query+'&nc=%s' % cacheBuster
         else:
-            persist = self.request.get('__ac_persistent', '')
-            retval = '/login_redirect?__ac_persistent=%s' % persist
+            query = 'nc=%s' % cacheBuster
+        retval = '?'.join((url, query))
+
         assert retval
         return retval
     
