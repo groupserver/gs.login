@@ -8,6 +8,12 @@
     class=".view.GSLoginView"
     template="browser/templates/default/login.pt"
     permission="zope2.Public" />
+  <browser:resource 
+    name="gs-login-20130402.js"
+    file="browser/javascript/login.js"
+    permission="zope2.Public" />
+
+
   <!--see Feature 3445: Easy Login https://redmine.iopen.net/issues/3445
       browser:viewlet name="gs-login-easy-login"
     for="Products.GSContent.interfaces.IGSSiteFolder"

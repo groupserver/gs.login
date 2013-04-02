@@ -117,35 +117,8 @@
         </div><!--gs-login-permission-denied-->
       </tal:block><!--not:view/loggedInUserInfo/anonymous-->
     </tal:block><!--body-->
-    <div id="gs-login-script"
-      metal:fill-slot="javascript"
-      tal:condition="view/loggedInUserInfo/anonymous">
-      <script type="text/javascript" 
-        src="/++resource++crypto/sha1.js">&#160;</script>
-      <script type="text/javascript"
-        src="/++resource++popup_help-20071218.js">&#160;</script>
-      <script type="text/javascript">
-        jQuery.noConflict();
-        function loginSubmit(event) {
-            var el = jQuery('#login-form');
-            var pw = jQuery('#password').val();
-            var encrypt = jQuery('#ep').val();
-            if (encrypt == 'True') {
-                pw = b64_sha1(pw);
-            }
-            var loginText = jQuery('#login').val();
-            var seed = jQuery('#seed').val();
-            var new_passvalue = hex_hmac_sha1(pw, (loginText+pw+seed));
-            jQuery('#ph').val(new_passvalue);
-            jQuery('#password').val('');
-            //Event.unloadCache();
-        };
-        jQuery(document).ready( function () {
-            GSPopupFormHelp.init('#login-form');
-            jQuery('#login-form').submit(loginSubmit);
-            jQuery('#login').focus();
-        });
-      </script>
-    </div><!--gs-login-script-->
+    <script metal:fill-slot="javascript" defer="true" 
+            tal:condition="view/loggedInUserInfo/anonymous"
+            src="/++resource++gs-login-20130402.js">&#160;</script>
   </body>
 </html>
