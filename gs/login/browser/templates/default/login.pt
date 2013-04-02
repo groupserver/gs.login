@@ -31,7 +31,7 @@
     <tal:block metal:fill-slot="body">
       <div id="gs-login-anon" 
         tal:condition="view/loggedInUserInfo/anonymous">
-        <h1>Login</h1>
+        <h1>Sign in</h1>
         <form id="login-form" tal:attributes="action request/URL">
           <input type="hidden" id="seed" name="seed" 
             tal:attributes="value view/encryptionSeed"/>
@@ -71,12 +71,12 @@
           <div id="gs-login-buttons" class="buttons">
             <div class="formelementbutton">
               <input class="button" type="submit" name="submit" 
-                id="loginButton" value="Login" />
+                id="loginButton" value="Sign in" />
             </div>
           </div><!--gs-login-buttons-->
         </form><!--login-form-->
         <dl>
-          <dt>Can't log in?</dt>
+          <dt>Can't sign in?</dt>
           <dd>
             <a href="/reset_password.html">Reset your 
               <strong>password</strong></a>
@@ -94,7 +94,7 @@
           tal:condition="view/logged_in_user_viewing_login">
           <h1>You are Already Logged In</h1>
           <p>
-            You cannot login, because you are already logged in!
+            You cannot sign in, because you are already logged in!
             Go to 
             <a href="/">the homepage for
               <span class="site" 
@@ -119,6 +119,6 @@
     </tal:block><!--body-->
     <script metal:fill-slot="javascript" defer="true" 
             tal:condition="view/loggedInUserInfo/anonymous"
-            src="/++resource++gs-login-20130402.js">&#160;</script>
+            src="/++resource++gs-login-min-20130402.js">&#160;</script>
   </body>
 </html>

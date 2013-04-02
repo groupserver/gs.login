@@ -23,5 +23,5 @@ function init_login() {
 }
 
 jQuery(window).load( function() {
-    gsJsLoader.with_module("/++resource++crypto/sha1.js", init_login);
+    gsJsLoader.with_module("/++resource++crypto-20130402/sha1-min.js", init_login);
 });
