@@ -3,16 +3,17 @@
 from hashlib import sha1 as sha
 from hmac import new as hmac_new
 from urllib import splitquery, quote
-from gs.content.base.page import SitePage
+from gs.content.base import SitePage
 from util import seedGenerator
 from loginaudit import *
 
-class GSLoginView( SitePage ):
+
+class GSLoginView(SitePage):
     def __init__(self, context, request):
         SitePage.__init__(self, context, request)
         self.state = None
 
-    def passwordsEncrypted( self ):
+    def passwordsEncrypted(self):
         return bool(self.context.acl_users.encrypt_passwords)
 
     @property
@@ -20,11 +21,11 @@ class GSLoginView( SitePage ):
         return seedGenerator()
 
     @property
-    def logged_in_user_viewing_login( self ):
+    def logged_in_user_viewing_login(self):
         url = self.request.URL0
         baseLoginURL = '%s/login.html' % self.siteInfo.url
-        
-        retval = (url == baseLoginURL and 
+
+        retval = (url == baseLoginURL and
                     not(self.request.get('came_from', '')))
         assert type(retval) == bool
         return retval
@@ -49,7 +50,7 @@ class GSLoginView( SitePage ):
         if isinstance(retval, unicode):
             retval = retval.encode('utf-8')
         return retval
-    
+
     def store_password_cookie_for_user(self, user, password):
         if self.passwordsEncrypted():
             storepass = '{SHA}%s=' % password
@@ -58,7 +59,7 @@ class GSLoginView( SitePage ):
         cookieAuth = self.context.cookie_authentication
         uid = str(user.getId())
         cookieAuth.credentialsChanged(user, uid, storepass)
-    
+
     def get_redirect(self):
         retval = ''
         cameFrom = self.request.get('came_from', '')
@@ -69,15 +70,14 @@ class GSLoginView( SitePage ):
             url = '/'
         # Put a cache-buster at the end of the query
         if query:
-            
-            query = query+'&nc=%s' % cacheBuster
+            query = query + '&nc=%s' % cacheBuster
         else:
             query = 'nc=%s' % cacheBuster
         retval = '?'.join((url, query))
 
         assert retval
         return retval
-    
+
     def password_matches(self, login, password):
         # For security reasons the password is rarely passed in
         #   en-clear. Instead the password is hashed with a seed (ph,
@@ -85,22 +85,22 @@ class GSLoginView( SitePage ):
         #   (password, passed in) the system hashes the stored
         #   version, and then does a comparison.
         pw = self.request.get('password', '')
-        seed = self.request.get('seed','')
+        seed = self.request.get('seed', '')
         ph = self.request.get('ph', '')
         if ph:
             passhmac = ph
         else:
             # blindly try the password, even if it's set to nothing
-            msg = login+pw+seed
+            msg = login + pw + seed
             passhmac = hmac_new(pw, msg, sha).hexdigest()
-        msg = login+password+seed
+        msg = login + password + seed
         myhmac = hmac_new(password, msg, sha).hexdigest()
 
-        retval = passhmac == myhmac 
+        retval = passhmac == myhmac
         assert type(retval) == bool
         return retval
-        
-    def processCredentials( self ):
+
+    def processCredentials(self):
         '''Entry point for processing the Login page.'''
         login = self.request.get('login', '')
         if not login:
@@ -108,7 +108,7 @@ class GSLoginView( SitePage ):
         user = self.get_user_from_login(login)
         if user:
             auditor = LoginAuditor(self.siteInfo, user)
-            password = self.get_password_from_user(user)        
+            password = self.get_password_from_user(user)
             if self.password_matches(login, password):
                 self.store_password_cookie_for_user(user, password)
                 uri = self.get_redirect()
@@ -119,10 +119,10 @@ class GSLoginView( SitePage ):
 
                 self.state = (True, True, True)
                 self.request.response.redirect(uri)
-            else: # Password does not match
+            else:  # Password does not match
                 auditor.info(BADPASSWORD)
                 self.state = (False, True, True)
-        else: # There is no user
+        else:  # There is no user
             auditor = AnonLoginAuditor(self.context, self.siteInfo)
             auditor.info(BADUSERID, login)
             self.state = (False, False, False)
@@ -131,17 +131,16 @@ class GSLoginView( SitePage ):
     @property
     def supportMessage(self):
         msg = u'''Hello,
-        
+
 I saw a Permission Denied error when I visited\n    %s
 
 I think I should be able to see this page because...
 
 Thanks,
   %s\n  <%s%s>\n''' % \
-        (self.request.get('came_from',''), self.loggedInUserInfo.name,
-        self.siteInfo.url, self.loggedInUserInfo.url )
-        retval = 'mailto:%s?Subject=%s&body=%s'%\
-            (self.siteInfo.get_support_email(), 
+        (self.request.get('came_from', ''), self.loggedInUserInfo.name,
+        self.siteInfo.url, self.loggedInUserInfo.url)
+        retval = 'mailto:%s?Subject=%s&body=%s' % \
+            (self.siteInfo.get_support_email(),
             quote('Permission Denied'), quote(msg.encode('utf-8')))
         return retval
-

@@ -2,11 +2,12 @@
 import AccessControl.AuthEncoding
 from AccessControl.AuthEncoding import _schemes
 
+
 def pw_validate(reference, attempt):
     """Validate the provided password string, which uses LDAP-style encoding
     notation.  Reference is the correct password, attempt is clear text
     password attempt."""
-    
+
     for id, prefix, scheme in _schemes:
         lp = len(prefix)
         if reference[:lp] == prefix:
@@ -19,4 +20,3 @@ def pw_validate(reference, attempt):
     return (reference == attempt)
 
 AccessControl.AuthEncoding.pw_validate = pw_validate
-
