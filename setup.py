@@ -10,7 +10,6 @@ setup(name='gs.login',
       description="",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
         ],
@@ -25,15 +24,16 @@ setup(name='gs.login',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'pytz',
           'zope.component',
           'zope.interface',
+          'AccessControl',
           'gs.content.base',
+          'gs.content.layout',
           'gs.database',
-          'gs.viewlet',
           'Products.CustomUserFolder',
           'Products.XWFCore',
           'Products.GSAuditTrail',
-          # -*- Extra requirements: -*-
       ],
       entry_points="""
       # -*- Entry points: -*-
