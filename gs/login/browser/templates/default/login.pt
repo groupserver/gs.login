@@ -60,15 +60,23 @@
               type="password" name="password" 
               value="" title="Enter your password"/>
           </div><!--gs-login-password-->
-          <div id="gs-login-remember-me"
-            class="form-widget not-required">
-            <input type="checkbox" title="Remember me" 
-              class="checkboxType" value="1" 
-              name="__ac_persistent" id="__ac_persistent" />
-            <label for="__ac_persistent" class="checkboxLabel"
-              title="Check this if you want to automatically log in next time you visit this site from this computer. Do not check this if you are using a public terminal!">Remember me</label>
-          </div><!--gs-login-remember-me-->
+          <div id="gs-login-password-toggle"
+               class="form-widget not-required gs-profile-password-toggle">
+            <input id="gs-login-password-toggle-widget"
+                   class="checkboxType" type="checkbox" value="0" />
+            <label for="gs-login-password-toggle-widget"
+                   title="Select if you want to see your password."
+                   class="checkboxLabel">Show password</label>
+          </div><!--gs-login-password-toggle-->
           <div id="gs-login-buttons" class="buttons">
+            <div id="gs-login-remember-me"
+                 class="form-widget not-required">
+              <input type="checkbox" title="Remember me" 
+                     class="checkboxType" value="1" 
+                     name="__ac_persistent" id="__ac_persistent" />
+              <label for="__ac_persistent" class="checkboxLabel"
+                     title="Select this if you want to automatically log in next time you visit using this computer. Do not select this if you are using a public terminal!">Remember me</label>
+            </div><!--gs-login-remember-me-->
             <div class="formelementbutton">
               <input class="button" type="submit" name="submit" 
                 id="loginButton" value="Sign in" />
@@ -119,6 +127,6 @@
     </tal:block><!--body-->
     <script metal:fill-slot="javascript" defer="true" 
             tal:condition="view/loggedInUserInfo/anonymous"
-            src="/++resource++gs-login-min-20130402.js">&#160;</script>
+            src="/++resource++gs-login-min-20130517.js">&#160;</script>
   </body>
 </html>
