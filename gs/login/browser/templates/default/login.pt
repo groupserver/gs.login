@@ -32,7 +32,8 @@
       <div id="gs-login-anon" 
         tal:condition="view/loggedInUserInfo/anonymous">
         <h1>Sign in</h1>
-        <form id="login-form" tal:attributes="action request/URL">
+        <form id="login-form" class="gs-content-js-required" 
+              tal:attributes="action request/URL">
           <input type="hidden" id="seed" name="seed" 
             tal:attributes="value view/encryptionSeed"/>
           <input type="hidden" id="ep" name="ep" 
@@ -43,8 +44,7 @@
           <input type="hidden" id="failed" name="failed" 
             tal:define="v python:view.state and not view.state[0]"
             tal:attributes="value v"/>
-          <div id="login-id-widget"
-            class="form-widget required">
+          <div id="login-id-widget" class="form-widget required">
             <label class="text" 
               title="Enter the email address, or login name, you use with your forums on this site"
               for="login">Email Address</label>
