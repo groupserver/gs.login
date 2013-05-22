@@ -1,17 +1,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
-  metal:use-macro="context/@@groupserver_site_home_layout/page">
+  metal:use-macro="context/@@groupserver_layout/page">
   <head>
-    <title metal:fill-slot="title">Logged Out:
+    <title metal:fill-slot="title">Signed Out:
       <span tal:replace="view/siteInfo/name">This Site</span></title>
   </head>
   <body>
-    <div metal:fill-slot="contextnavigation">&#160;</div>
+    <tal:block metal:fill-slot="utilitylinks">
+      <ul class="dotted-inline-list" role="navigation" id="utilitylinks">
+        <li id="utilitylinks-log-in">
+          <a title="Log in here" data-icon="🔒" class="btn btn-small" 
+             href="/login.html" id="utilitylinks-log-in-link">Sign in</a>
+        </li>
+      </ul>
+    </tal:block>
     <tal:block metal:fill-slot="body">
-      <h1>Logged Out</h1>
+      <h1>Signed Out</h1>
       <p>Thank-you for participating. 
-        You have been logged out of the system.</p>
+        You have been signed out.</p>
       <p>If you hadn't meant to do this you may return to the 
         <a href="/login.html">login page</a>.</p>
     </tal:block>
