@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 import os
 from setuptools import setup, find_packages
 from version import get_version
@@ -13,11 +13,11 @@ setup(name='gs.login',
       classifiers=[
         "Programming Language :: Python",
         ],
-      keywords='',
+      keywords='login authentication',
       author='Richard Waid',
       author_email='richard@iopen.net',
       url='http://groupserver.org',
-      license='ZPL',
+      license='ZPL 2.1',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['gs'],
       include_package_data=True,
