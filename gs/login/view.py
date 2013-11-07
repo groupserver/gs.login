@@ -24,7 +24,12 @@ from .loginaudit import LOGIN, BADPASSWORD, BADUSERID, LoginAuditor, \
 
 class GSLoginView(SitePage):
     def __init__(self, context, request):
-        SitePage.__init__(self, context, request)
+        super(GSLoginView, self).__init__(context, request)
+        # --==mpj17=-- For some reason that I cannot fathom, despite 90 minutes
+        # of searching, I have to set the content type for the Login page. Any
+        # ideas as to *why* can be sent to <mpj17@onlinegroups.net>
+        self.request.response.setHeader('Content-Type',
+                                        'text/html; charset=utf-8')
         self.state = None
 
     def passwordsEncrypted(self):
