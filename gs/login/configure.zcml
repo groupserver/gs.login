@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configure xmlns="http://namespaces.zope.org/zope"
-  xmlns:browser="http://namespaces.zope.org/browser"
-  xmlns:five="http://namespaces.zope.org/five">
-  
-  <browser:page name="login.html"
-    for="*" 
+           xmlns:browser="http://namespaces.zope.org/browser">
+
+  <browser:page
+    name="login.html"
+    for="*"
     class=".view.GSLoginView"
     template="browser/templates/default/login.pt"
     permission="zope2.Public" />
-  <browser:resource 
+  <browser:resource
     name="gs-login-20130517.js"
     file="browser/javascript/login.js"
     permission="zope2.Public" />
-  <browser:resource 
+  <browser:resource
     name="gs-login-min-20130517.js"
     file="browser/javascript/login-min.js"
     permission="zope2.Public" />
@@ -21,7 +21,6 @@
     directory="browser/javascript/crypto"
     permission="zope2.Public" />
 
-
   <!--see Feature 3445: Easy Login https://redmine.iopen.net/issues/3445
       browser:viewlet name="gs-login-easy-login"
     for="Products.GSContent.interfaces.IGSSiteFolder"
@@ -29,7 +28,7 @@
     template="browser/templates/default/easylogin.pt"
     class=".easylogin.EasyLogin"
     weight="5"
-    title="Login" 
+    title="Login"
     permission="zope2.Public"/>
   <browser:viewlet name="gs-login-easy-login-javascript"
     for="Products.GSContent.interfaces.IGSSiteFolder"
@@ -37,20 +36,19 @@
     template="browser/templates/default/easylogin-js.pt"
     class=".easylogin.EasyLogin"
     weight="5"
-    title="Login" 
+    title="Login"
     permission="zope2.Public"/-->
 
   <browser:page name="logout.html"
-    for="*" 
+    for="*"
     class="gs.content.base.page.SitePage"
-    template="browser/templates/default/loggedout.pt" 
+    template="browser/templates/default/loggedout.pt"
     permission="zope2.Public" />
 
   <utility
-    name="groupserver.Login" 
+    name="groupserver.Login"
     factory=".loginaudit.LoginAuditEventFactory"
     provides="zope.component.interfaces.IFactory"
     permission="zope.Public" />
 
 </configure>
-
