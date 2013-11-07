@@ -1,11 +1,25 @@
-# coding=utf-8
-'''The GroupServer Login page'''
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+# Copyright © 2013 OnlineGroups.net and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+from __future__ import absolute_import
 from hashlib import sha1 as sha
 from hmac import new as hmac_new
 from urllib import splitquery, quote
 from gs.content.base import SitePage
-from util import seedGenerator
-from loginaudit import *
+from .util import seedGenerator
+from .loginaudit import LOGIN, BADPASSWORD, BADUSERID, LoginAuditor, \
+    AnonLoginAuditor
 
 
 class GSLoginView(SitePage):
