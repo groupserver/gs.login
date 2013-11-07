@@ -11,8 +11,16 @@ setup(name='gs.login',
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        "Environment :: Web Environment",
+        "Framework :: Zope2",
+        "Intended Audience :: Developers",
+        'License :: OSI Approved :: Zope Public License',
+        "Natural Language :: English",
+        "Operating System :: POSIX :: Linux"
         "Programming Language :: Python",
-        ],
+        "Topic :: Software Development :: Libraries :: Python Modules",
+      ],
       keywords='login authentication',
       author='Richard Waid',
       author_email='richard@iopen.net',
