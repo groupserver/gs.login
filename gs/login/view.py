@@ -12,11 +12,12 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from hashlib import sha1 as sha
 from hmac import new as hmac_new
 from urllib import splitquery, quote
 from gs.content.base import SitePage
+from gs.core import to_ascii
 from .util import seedGenerator
 from .loginaudit import LOGIN, BADPASSWORD, BADUSERID, LoginAuditor, \
     AnonLoginAuditor
@@ -28,8 +29,8 @@ class GSLoginView(SitePage):
         # --==mpj17=-- For some reason that I cannot fathom, despite 90 minutes
         # of searching, I have to set the content type for the Login page. Any
         # ideas as to *why* can be sent to <mpj17@onlinegroups.net>
-        self.request.response.setHeader('Content-Type',
-                                        'text/html; charset=utf-8')
+        self.request.response.setHeader(to_ascii('Content-Type'),
+                                        to_ascii('text/html; charset=utf-8'))
         self.state = None
 
     def passwordsEncrypted(self):
