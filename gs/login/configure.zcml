@@ -13,9 +13,18 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:browser="http://namespaces.zope.org/browser">
 
+  <!--The Login page is *available* for every page-->
   <browser:page
     name="login.html"
     for="*"
+    class=".view.GSLoginView"
+    template="browser/templates/default/login.pt"
+    permission="zope2.Public" />
+  <!-- Explicitly display the Loging page if a Forbidden error is -->
+  <!-- raised. The Login page does double duty as Permission Denied. -->
+   <browser:page
+    name="login.html"
+    for="zope.security.interfaces.IForbidden"
     class=".view.GSLoginView"
     template="browser/templates/default/login.pt"
     permission="zope2.Public" />
