@@ -26,12 +26,16 @@ from .loginaudit import LOGIN, BADPASSWORD, BADUSERID, LoginAuditor, \
 class GSLoginView(SitePage):
     def __init__(self, context, request):
         super(GSLoginView, self).__init__(context, request)
+        self.state = None
+
+    def __call__(self):
+        retval = super(GSLoginView, self).__call__()
         # --==mpj17=-- For some reason that I cannot fathom, despite 90 minutes
         # of searching, I have to set the content type for the Login page. Any
         # ideas as to *why* can be sent to <mpj17@onlinegroups.net>
         self.request.response.setHeader(to_ascii('Content-Type'),
                                         to_ascii('text/html; charset=utf-8'))
-        self.state = None
+        return retval
 
     def passwordsEncrypted(self):
         return bool(self.context.acl_users.encrypt_passwords)
@@ -62,7 +66,8 @@ class GSLoginView(SitePage):
         return retval
 
     def get_password_from_user(self, user):
-        assert user, 'There is no user.'
+        if not user:
+            raise ValueError('There is no user.')
         retval = user.get_password()
         if self.passwordsEncrypted():
             # Strip off the encoding declaration and the trailing '='
