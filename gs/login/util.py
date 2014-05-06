@@ -18,6 +18,8 @@ import time
 
 
 def seedGenerator():
+    "Generate a random seed"
+    # TODO: use gs.core.to_id?
     s = sha(str(time.time()) + str(random.random()))
     retval = s.hexdigest()
     assert retval
