@@ -29,12 +29,20 @@ class GSLoginView(SitePage):
         self.state = None
 
     def __call__(self):
+        'Return the page with the correct MIME-type and status code.'
+        response = self.request.response
         retval = super(GSLoginView, self).__call__()
         # --==mpj17=-- For some reason that I cannot fathom, despite 90 minutes
         # of searching, I have to set the content type for the Login page. Any
         # ideas as to *why* can be sent to <mpj17@onlinegroups.net>
-        self.request.response.setHeader(to_ascii('Content-Type'),
-                                        to_ascii('text/html; charset=utf-8'))
+        response.setHeader(to_ascii('Content-Type'),
+                            to_ascii('text/html; charset=utf-8'))
+        # The reponse will be a previously set 30x Redirect, a 200 OK, or a
+        #   403 Forbidden. A 401 is not returned because we are not doing
+        #   basic or digest auth.
+        if ((response.getStatus() == 200)
+                and (not self.loggedInUserInfo.anonymous)):
+            response.setStatus(403)
         return retval
 
     def passwordsEncrypted(self):
