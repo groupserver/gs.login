@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright © 2013 OnlineGroups.net and Contributors.
+# Copyright © 2013, 2014 OnlineGroups.net and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -36,8 +36,10 @@ setup(name='gs.login',
       ],
       keywords='login authentication',
       author='Richard Waid',
-      author_email='richard@iopen.net',
-      url='http://groupserver.org',
+      author_email='richard@onlinegroups.net',
+      maintainer='Michael JasonSmith',
+      maintainer_email='mpj17@onlinegroups.net',
+      url='https://source.iopen.net/groupserver/gs.login/',
       license='ZPL 2.1',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['gs'],
