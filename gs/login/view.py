@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+############################################################################
 #
-# Copyright © 2013 OnlineGroups.net and Contributors.
+# Copyright © 2013, 2015 OnlineGroups.net and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,13 +11,16 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE.
 #
-##############################################################################
-from __future__ import absolute_import, unicode_literals
+############################################################################
+from __future__ import absolute_import, print_function, unicode_literals
 from hashlib import sha1 as sha
 from hmac import new as hmac_new
-from urllib import splitquery, quote
+import sys
+if (sys.version_info >= (3, )):
+    from urllib.parse import splitquery, quote
+else:
+    from urllib import splitquery, quote  # lint:ok
 from gs.content.base import SitePage
-from gs.core import to_ascii
 from .util import seedGenerator
 from .loginaudit import LOGIN, BADPASSWORD, BADUSERID, LoginAuditor, \
     AnonLoginAuditor
@@ -32,11 +35,11 @@ class GSLoginView(SitePage):
         'Return the page with the correct MIME-type and status code.'
         response = self.request.response
         retval = super(GSLoginView, self).__call__()
-        # --==mpj17=-- For some reason that I cannot fathom, despite 90 minutes
-        # of searching, I have to set the content type for the Login page. Any
-        # ideas as to *why* can be sent to <mpj17@onlinegroups.net>
-        response.setHeader(to_ascii('Content-Type'),
-                            to_ascii('text/html; charset=utf-8'))
+        # --==mpj17=-- For some reason that I cannot fathom, despite 90
+        # minutes of searching, I have to set the content type for the Login
+        # page. Any ideas as to *why* can be sent to
+        # <mpj17@onlinegroups.net>
+        response.setHeader(b'Content-Type', b'text/html; charset=utf-8')
         # The reponse will be a previously set 30x Redirect, a 200 OK, or a
         #   403 Forbidden. A 401 is not returned because we are not doing
         #   basic or digest auth.
@@ -58,7 +61,7 @@ class GSLoginView(SitePage):
         baseLoginURL = '%s/login.html' % self.siteInfo.url
 
         retval = (url == baseLoginURL and
-                    not(self.request.get('came_from', '')))
+                  not(self.request.get('came_from', '')))
         assert type(retval) == bool
         return retval
 
@@ -171,9 +174,9 @@ I think I should be able to see this page because...
 
 Thanks,
   %s\n  <%s%s>\n''' % \
-        (self.request.get('came_from', ''), self.loggedInUserInfo.name,
-        self.siteInfo.url, self.loggedInUserInfo.url)
-        retval = 'mailto:%s?Subject=%s&body=%s' % \
-            (self.siteInfo.get_support_email(),
-            quote('Permission Denied'), quote(msg.encode('utf-8')))
+            (self.request.get('came_from', ''), self.loggedInUserInfo.name,
+             self.siteInfo.url, self.loggedInUserInfo.url)
+        r = 'mailto:{0}?subject={1}&body={2}'
+        retval = r.format(self.siteInfo.get_support_email(),
+                          quote('Permission Denied'), quote(msg.encode('utf-8')))
         return retval
