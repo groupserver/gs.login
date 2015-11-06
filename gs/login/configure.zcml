@@ -34,7 +34,7 @@
     permission="zope2.Public" />
   <browser:resource
     name="gs-login-min-20130517.js"
-    file="browser/javascript/login-min.js"
+    file="browser/javascript/login.js"
     permission="zope2.Public" />
   <browser:resourceDirectory
     name="crypto-20130402"
