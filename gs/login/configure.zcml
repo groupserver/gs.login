@@ -29,6 +29,10 @@
     template="browser/templates/default/login.pt"
     permission="zope2.Public" />
   <browser:resource
+    name="gs-login-min-20151106.js"
+    file="browser/javascript/login-min.js"
+    permission="zope2.Public" />
+  <browser:resource
     name="gs-login-20130517.js"
     file="browser/javascript/login.js"
     permission="zope2.Public" />

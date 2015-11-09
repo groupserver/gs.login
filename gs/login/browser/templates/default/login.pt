@@ -132,6 +132,6 @@
     </div><!--gs-login-->
     <script metal:fill-slot="javascript" defer="true"
             tal:condition="view/loggedInUserInfo/anonymous"
-            src="/++resource++gs-login-min-20130517.js">&#160;</script>
+            src="/++resource++gs-login-min-20151106.js"> </script>
   </body>
 </html>
